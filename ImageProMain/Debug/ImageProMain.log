@@ -1,0 +1,4 @@
+﻿ImageProMain.obj : error LNK2019: 无法解析的外部符号 "public: __thiscall ImageTrans::ImageTrans(void)" (??0ImageTrans@@QAE@XZ)，该符号在函数 _wmain 中被引用
+ImageProMain.obj : error LNK2019: 无法解析的外部符号 "public: class std::vector<class cv::Mat,class std::allocator<class cv::Mat> > __thiscall ImageTrans::getImageColorSplit(class cv::Mat &,int)" (?getImageColorSplit@ImageTrans@@QAE?AV?$vector@VMat@cv@@V?$allocator@VMat@cv@@@std@@@std@@AAVMat@cv@@H@Z)，该符号在函数 _wmain 中被引用
+ImageProMain.obj : error LNK2019: 无法解析的外部符号 "public: __thiscall ImageTrans::~ImageTrans(void)" (??1ImageTrans@@QAE@XZ)，该符号在函数 _wmain 中被引用
+G:\10ImagePro\ImagePro\Debug\ImageProMain.exe : fatal error LNK1120: 3 个无法解析的外部命令
