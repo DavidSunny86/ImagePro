@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ImagePro", "ImagePro\ImagePro.vcxproj", "{44B763A4-A75D-4BE3-B5B1-1EBDFA93189E}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ImagePro", "imagePro13\ImagePro\ImagePro.vcxproj", "{44B763A4-A75D-4BE3-B5B1-1EBDFA93189E}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ImageProMain", "ImageProMain\ImageProMain.vcxproj", "{CE0677F1-F465-4C71-9F28-0A71B7E056A4}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ImageProMain", "imagePro13\ImageProMain\ImageProMain.vcxproj", "{CE0677F1-F465-4C71-9F28-0A71B7E056A4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
