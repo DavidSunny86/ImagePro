@@ -21,9 +21,21 @@
     <ClInclude Include="..\..\src\imagePro\ImageTrans.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\imagePro\ImageFeature.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ImageEdge.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\imagePro\ImageTrans.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\imagePro\ImageFeature.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ImageEdge.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

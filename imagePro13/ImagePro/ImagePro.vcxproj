@@ -78,11 +78,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\src\imagePro\ImageFeature.hpp" />
     <ClInclude Include="..\..\src\imagePro\ImageProCom.h" />
     <ClInclude Include="..\..\src\imagePro\ImageTrans.h" />
+    <ClInclude Include="ImageEdge.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\src\imagePro\ImageFeature.cpp" />
     <ClCompile Include="..\..\src\imagePro\ImageTrans.cpp" />
+    <ClCompile Include="ImageEdge.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
