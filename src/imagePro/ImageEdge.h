@@ -2,10 +2,6 @@
 #define IMAGEEDGE_H_
 
 #include "ImageProCom.h"
-#include "cv.h"
-#include <opencv2/opencv.hpp>
-
-
 
 class IMAGEPRO_MODEL_EXPORT ImageEdge
 {
