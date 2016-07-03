@@ -38,9 +38,9 @@ int main(int argc, char **argv)
 
 	Point center(srcImg.cols / 2, srcImg.rows / 2);
 
-#ifdef DEGREE
+#if 1
 	//Rotate source image
-	Mat rotMatS = getRotationMatrix2D(center, DEGREE, 1.0);
+	Mat rotMatS = getRotationMatrix2D(center, 90, 1.0);
 	warpAffine(srcImg, srcImg, rotMatS, srcImg.size(), 1, 0, Scalar(255, 255, 255));
 	imshow("RotatedSrc", srcImg);
 	//imwrite("imageText_R.jpg",srcImg);
