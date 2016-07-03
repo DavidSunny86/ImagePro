@@ -42,6 +42,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <LibraryPath>$(OPENCV)\x86\vc12\lib;$(OPENCV)\x86\vc12\staclib;$(LibraryPath)</LibraryPath>
+    <OutDir>$(SolutionDir)\Runner13\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -87,11 +88,13 @@
   <ItemGroup>
     <ClCompile Include="..\src\ImageEdge.cpp" />
     <ClCompile Include="..\src\ImageFeature.cpp" />
+    <ClCompile Include="..\src\ImageFFT.cpp" />
     <ClCompile Include="..\src\ImageTrans.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\ImageEdge.h" />
     <ClInclude Include="..\src\ImageFeature.hpp" />
+    <ClInclude Include="..\src\ImageFFT.h" />
     <ClInclude Include="..\src\ImagePro.h" />
     <ClInclude Include="..\src\ImageProCom.h" />
     <ClInclude Include="..\src\ImageTrans.h" />

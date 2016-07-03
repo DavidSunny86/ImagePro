@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\src\ImageBeauityUtils.h" />
+    <ClInclude Include="..\src\ImageBeautyUtils.h" />
     <ClInclude Include="..\src\ImageBeauty.h" />
     <ClInclude Include="..\src\ImageSkin.h" />
   </ItemGroup>
@@ -48,6 +48,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LibraryPath>$(OPENCV)\x86\vc12\staclib;$(OPENCV)\x86\vc12\lib;$(LibraryPath)</LibraryPath>
+    <OutDir>$(SolutionDir)\Runner13\$(Configuration)\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

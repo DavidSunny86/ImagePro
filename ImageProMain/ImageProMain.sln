@@ -4,6 +4,10 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ImageProMain", "ImageProMain\ImageProMain.vcxproj", "{60EF8D80-A4DB-4492-A8E8-6C9E0E606B67}"
+	ProjectSection(ProjectDependencies) = postProject
+		{AD05A28A-54D6-4F84-AFC5-C776737B7454} = {AD05A28A-54D6-4F84-AFC5-C776737B7454}
+		{4C38BABE-73D0-4B8A-B0BB-69F7CA882C66} = {4C38BABE-73D0-4B8A-B0BB-69F7CA882C66}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ImageBeauty", "..\ImageBeauty\ImageBeauty\ImageBeauty.vcxproj", "{4C38BABE-73D0-4B8A-B0BB-69F7CA882C66}"
 EndProject

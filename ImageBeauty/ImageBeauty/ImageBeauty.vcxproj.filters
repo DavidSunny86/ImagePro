@@ -15,13 +15,13 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\src\ImageBeauityUtils.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\ImageSkin.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="..\src\ImageBeauty.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\ImageBeautyUtils.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
