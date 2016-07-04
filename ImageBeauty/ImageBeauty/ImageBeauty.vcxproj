@@ -11,8 +11,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\src\ImageBeautyUtils.h" />
     <ClInclude Include="..\src\ImageBeauty.h" />
+    <ClInclude Include="..\src\ImageBeautyUtils.h" />
     <ClInclude Include="..\src\ImageSkin.h" />
   </ItemGroup>
   <ItemGroup>
