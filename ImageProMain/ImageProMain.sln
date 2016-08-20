@@ -13,7 +13,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ImageBeauty", "..\ImageBeau
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ImagePro", "..\ImagePro\ImagePro\ImagePro.vcxproj", "{AD05A28A-54D6-4F84-AFC5-C776737B7454}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ImageDefectDet", "ImageDefectDetect\ImageDefectDetect.vcxproj", "{0AE7AEF5-05EA-45E3-8496-63210D969F8C}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ImageRecognition", "..\ImageRecognition\ImageRecognition\ImageRecognition.vcxproj", "{F598D044-7F00-4ABA-9386-11A4EBA13ACF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -49,14 +49,14 @@ Global
 		{AD05A28A-54D6-4F84-AFC5-C776737B7454}.Release|Win32.ActiveCfg = Release|Win32
 		{AD05A28A-54D6-4F84-AFC5-C776737B7454}.Release|Win32.Build.0 = Release|Win32
 		{AD05A28A-54D6-4F84-AFC5-C776737B7454}.Release|x64.ActiveCfg = Release|Win32
-		{0AE7AEF5-05EA-45E3-8496-63210D969F8C}.Debug|ARM.ActiveCfg = Debug|Win32
-		{0AE7AEF5-05EA-45E3-8496-63210D969F8C}.Debug|Win32.ActiveCfg = Debug|Win32
-		{0AE7AEF5-05EA-45E3-8496-63210D969F8C}.Debug|Win32.Build.0 = Debug|Win32
-		{0AE7AEF5-05EA-45E3-8496-63210D969F8C}.Debug|x64.ActiveCfg = Debug|Win32
-		{0AE7AEF5-05EA-45E3-8496-63210D969F8C}.Release|ARM.ActiveCfg = Release|Win32
-		{0AE7AEF5-05EA-45E3-8496-63210D969F8C}.Release|Win32.ActiveCfg = Release|Win32
-		{0AE7AEF5-05EA-45E3-8496-63210D969F8C}.Release|Win32.Build.0 = Release|Win32
-		{0AE7AEF5-05EA-45E3-8496-63210D969F8C}.Release|x64.ActiveCfg = Release|Win32
+		{F598D044-7F00-4ABA-9386-11A4EBA13ACF}.Debug|ARM.ActiveCfg = Debug|Win32
+		{F598D044-7F00-4ABA-9386-11A4EBA13ACF}.Debug|Win32.ActiveCfg = Debug|Win32
+		{F598D044-7F00-4ABA-9386-11A4EBA13ACF}.Debug|Win32.Build.0 = Debug|Win32
+		{F598D044-7F00-4ABA-9386-11A4EBA13ACF}.Debug|x64.ActiveCfg = Debug|Win32
+		{F598D044-7F00-4ABA-9386-11A4EBA13ACF}.Release|ARM.ActiveCfg = Release|Win32
+		{F598D044-7F00-4ABA-9386-11A4EBA13ACF}.Release|Win32.ActiveCfg = Release|Win32
+		{F598D044-7F00-4ABA-9386-11A4EBA13ACF}.Release|Win32.Build.0 = Release|Win32
+		{F598D044-7F00-4ABA-9386-11A4EBA13ACF}.Release|x64.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
