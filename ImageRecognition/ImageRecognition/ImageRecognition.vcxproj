@@ -44,6 +44,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>(OPENCV)\include\opencv2\;(OPENCV)\include\opencv\;(OPENCV)\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -68,10 +69,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\src\ImageBaseRec.cpp" />
+    <ClCompile Include="TwoDBarCodeRec.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\ImageBaseRec.h" />
     <ClInclude Include="..\src\ImageRecUtils.h" />
+    <ClInclude Include="TwoDBarCodeRec.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -30,6 +30,9 @@
     <ClCompile Include="..\src\ImageFFT.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\ImageSegment.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\ImageEdge.h">
@@ -48,6 +51,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="..\src\ImageFFT.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\ImageSegment.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
