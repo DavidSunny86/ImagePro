@@ -69,11 +69,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\src\ImageBaseRec.cpp" />
+    <ClCompile Include="..\src\ImageShapeFeature.cpp" />
     <ClCompile Include="TwoDBarCodeRec.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\ImageBaseRec.h" />
     <ClInclude Include="..\src\ImageRecUtils.h" />
+    <ClInclude Include="..\src\ImageShapeFeature.h" />
     <ClInclude Include="TwoDBarCodeRec.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

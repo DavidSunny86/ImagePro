@@ -18,12 +18,24 @@
     <ClCompile Include="..\src\ImageBaseRec.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="TwoDBarCodeRec.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ImageShapeFeature.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\ImageBaseRec.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="..\src\ImageRecUtils.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="TwoDBarCodeRec.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\ImageShapeFeature.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
