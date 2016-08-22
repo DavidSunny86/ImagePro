@@ -24,6 +24,8 @@ public:
 	Mat imageElementFastReplace(Mat& src,int oldValue,int newValue);
 
 	bool imageSegment(Mat& src, Mat& dst,int segmentMode,int spatialRad,int colorRad,int maxPryLevel);
+	int  imageElementFastReplaceByOtherImage(Mat& src, Mat& other);
+	int  imageElementFastReplace(Mat& src, int oldValue, int newValue);
 
 
 	~ImageSegment();

@@ -4,28 +4,7 @@ ImageSegment::ImageSegment()
 {}
 
 
-
-Mat ImageSegment::imageElementFastReplace(Mat& src, int oldValue, int newValue)
-{
-	if (src.empty())
-		return src;
-
-	for (int j = 0; j < src.rows; j++)
-	{
-		uchar* data = src.ptr<uchar>(j);
-		for (int i = 0; i < src.cols; i++)
-		{
-			if (data[i] == oldValue)
-				data[i] = newValue;
-		}
-	} 
-
-	return src;
-}
-
-
-
-bool ImageSegment::imageSegment(Mat& src, Mat& dst, int segmentMode, int spatialRad, int colorRad, int maxPryLevel)
+bool ImageSegment::imageSegment(Mat& src, Mat& dst, int segmentMode, int spatialRad,int colorRad, int maxPryLevel)
 {
 	if (src.empty())
 	{
@@ -52,53 +31,6 @@ bool ImageSegment::imageSegment(Mat& src, Mat& dst, int segmentMode, int spatial
 		}
 	}
 	break;
-	case IMG_SEGMENT_WATERSHED:
-	{
-		Mat markers;
-		// this block code aim to get the fg and bg target , at real project you should give the info
-		{
-			// water thresold methods nend binary image
-			Mat thresh;
-			threshold(src, thresh, 0, 255, THRESH_BINARY_INV + THRESH_OTSU);
-
-			// noise remove
-			Mat kernel = Mat::ones(3, 3, CV_8UC1);
-
-
-			// open oper
-			Mat opening;
-			morphologyEx(thresh, opening, MORPH_OPEN, kernel, Point(-1, -1), 2);
-
-			// sure background area
-			Mat sure_bg;
-			dilate(opening, sure_bg, kernel, Point(-1, -1), 3);
-
-			//Finding sure foreground area
-			Mat dist_transform;
-			distanceTransform(opening, dist_transform, DIST_L2, 5);
-			Mat sure_fg;
-			threshold(dist_transform, sure_fg, 0.7*dist_transform.max(), 255, 0);
-			Mat unknown;
-			subtract(sure_bg, sure_fg, unknown);
-
-			//Marker labelling
-			connectedComponents(sure_fg, markers);
-
-			//Add one to all labels so that sure background is not 0, but 1
-			markers = markers + 1;
-			unknown = imageElementFastReplace(unknown, 255, 0);
-			markers[unknown == 255] = 0;
-
-		}
-		
-		// Now, mark the region of unknown with zero
-		markers =watershed(src, markers);
-		src[markers == -1] = [255, 0, 0];
-
-
-	}
-	break;
-
 	default:
 		break;
 	}
@@ -106,27 +38,46 @@ bool ImageSegment::imageSegment(Mat& src, Mat& dst, int segmentMode, int spatial
 	return  true;
 }
 
-
-
+int ImageSegment::imageElementFastReplace(Mat& src, int oldValue, int newValue)
 {
-	void colorReduce(cv::Mat &image, int div = 64)
+	if (src.empty())
+		return -1;
+
+	for (int j = 0; j < src.rows; j++)
 	{
-		int nl = image.rows; // number of lines
-		// total number of elements per line
-		int nc = image.cols * image.channels();
-		for (int j = 0; j < nl; j++)
+		uchar* data = src.ptr<uchar>(j);
+		for (int i = 0; i < src.cols; i++)
 		{
-			// get the address of row j
-			uchar* data = image.ptr<uchar>(j);
-			for (int i = 0; i < nc; i++)
-			{
-				// process each pixel ---------------------
-				data[i] = data[i] / div * div + div / 2;
-				// end of pixel processing ----------------
-			}
-		} // end of line
+			if (data[i] == oldValue)
+				data[i] = newValue;
+		}
 	}
+
+	return 0;
 }
+
+int ImageSegment::imageElementFastReplaceByOtherImage(Mat& src, Mat& other,int value,int newValue)
+{
+	int iRet = 0;
+	if (src.empty() || other.empty())
+	{
+		return -1;
+	}
+
+	for (int j = 0; j < src.rows; j++)
+	{
+		uchar* data = src.ptr<uchar>(j);
+		uchar* otherData = other.ptr < uchar >(j);
+		for (int i = 0; i < src.cols; i++)
+		{
+			if (otherData[i] == value)
+				data[i] = newValue;
+		}
+	}
+
+	return 0;
+}
+
 
 ImageSegment::~ImageSegment()
 {}

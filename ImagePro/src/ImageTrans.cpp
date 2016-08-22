@@ -6,6 +6,17 @@ ImageTrans::ImageTrans()
 {
 }
 
+
+
+/*************************************************
+// Method: getImageColorSplit
+// Description:将图片分离成不同的颜色空间
+// Author: david.sun
+// Date: 2016/08/22
+// Returns: vector<Mat>
+// Parameter: srcMat
+// Parameter: mode
+*************************************************/
 vector<Mat> ImageTrans::getImageColorSplit(Mat& srcMat, int mode/*颜色分离颜色空间*/)
 {
 	vector<Mat> splitImg;
