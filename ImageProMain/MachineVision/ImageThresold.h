@@ -13,6 +13,8 @@ typedef enum Image_THRESOLD_TYPE
 	IMAGE_THRESOLD_ADAPTIVE,
 	IMAGE_THRESOLD_TOPDOWN,
 	IMAGE_THRESOLD_MAXENTROPY,
+	Image_thresold_bersen,
+	image_thresold_
 	IMAGE_THRESOLD_UNREV
 };
 

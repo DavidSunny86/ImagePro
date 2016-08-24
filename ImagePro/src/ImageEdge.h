@@ -19,6 +19,8 @@ class IMAGEPRO_MODEL_EXPORT ImageEdge
 public:
 	ImageEdge(Mat& srcMat);
 	Mat getImageResult(Mat& srcMat,int iModel);
+	int ConnectEdge(IplImage * src);
+
 	~ImageEdge();
 
 private:
