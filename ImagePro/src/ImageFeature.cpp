@@ -15,7 +15,6 @@ int ImageFeature::calcGLCM(IplImage* bWavelet, int angleDirection, double* featu
 		return 1;
 
 	width = bWavelet->width;
-	height = bWavelet->height;
 
 	int * glcm = new int[GLCM_CLASS * GLCM_CLASS];
 	int * histImage = new int[width * height];
