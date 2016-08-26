@@ -21,9 +21,6 @@
     <ClCompile Include="..\src\ImageEdge.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\ImageFeature.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\ImageTrans.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -31,6 +28,15 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="..\src\ImageSegment.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ImageTextFeature.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ImageShapeFeature.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ImageColorFeature.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
@@ -54,6 +60,12 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="..\src\ImageSegment.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ImageShapeFeature.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ImageColorFeature.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

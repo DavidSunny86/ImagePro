@@ -91,6 +91,7 @@
     <ClCompile Include="..\src\ImageFFT.cpp" />
     <ClCompile Include="..\src\ImageSegment.cpp" />
     <ClCompile Include="..\src\ImageTrans.cpp" />
+    <ClCompile Include="ImageColorFeature.cpp" />
     <ClCompile Include="ImageShapeFeature.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -101,6 +102,7 @@
     <ClInclude Include="..\src\ImageProCom.h" />
     <ClInclude Include="..\src\ImageSegment.h" />
     <ClInclude Include="..\src\ImageTrans.h" />
+    <ClInclude Include="ImageColorFeature.h" />
     <ClInclude Include="ImageShapeFeature.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
