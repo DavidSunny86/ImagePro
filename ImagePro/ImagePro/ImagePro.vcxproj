@@ -87,10 +87,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\ImageEdge.cpp" />
-    <ClCompile Include="..\src\ImageFeature.cpp" />
+    <ClCompile Include="..\src\ImageTextFeature.cpp" />
     <ClCompile Include="..\src\ImageFFT.cpp" />
     <ClCompile Include="..\src\ImageSegment.cpp" />
     <ClCompile Include="..\src\ImageTrans.cpp" />
+    <ClCompile Include="ImageShapeFeature.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\ImageEdge.h" />
@@ -100,6 +101,7 @@
     <ClInclude Include="..\src\ImageProCom.h" />
     <ClInclude Include="..\src\ImageSegment.h" />
     <ClInclude Include="..\src\ImageTrans.h" />
+    <ClInclude Include="ImageShapeFeature.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

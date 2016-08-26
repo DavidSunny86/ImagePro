@@ -15,7 +15,9 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ImagePro", "..\ImagePro\Ima
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ImageRecognition", "..\ImageRecognition\ImageRecognition\ImageRecognition.vcxproj", "{F598D044-7F00-4ABA-9386-11A4EBA13ACF}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MachineVision", "MachineVision\MachineVision.vcxproj", "{104A560C-661B-43C3-A7B0-4ED6AA386A30}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Caterpillar", "..\Caterpillar\Caterpillar.vcxproj", "{E87DA3EF-9702-4BF0-BE1F-87D63EA114F7}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MachineVision", "..\MachineVision\MachineVision.vcxproj", "{104A560C-661B-43C3-A7B0-4ED6AA386A30}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -59,6 +61,14 @@ Global
 		{F598D044-7F00-4ABA-9386-11A4EBA13ACF}.Release|Win32.ActiveCfg = Release|Win32
 		{F598D044-7F00-4ABA-9386-11A4EBA13ACF}.Release|Win32.Build.0 = Release|Win32
 		{F598D044-7F00-4ABA-9386-11A4EBA13ACF}.Release|x64.ActiveCfg = Release|Win32
+		{E87DA3EF-9702-4BF0-BE1F-87D63EA114F7}.Debug|ARM.ActiveCfg = Debug|Win32
+		{E87DA3EF-9702-4BF0-BE1F-87D63EA114F7}.Debug|Win32.ActiveCfg = Debug|Win32
+		{E87DA3EF-9702-4BF0-BE1F-87D63EA114F7}.Debug|Win32.Build.0 = Debug|Win32
+		{E87DA3EF-9702-4BF0-BE1F-87D63EA114F7}.Debug|x64.ActiveCfg = Debug|Win32
+		{E87DA3EF-9702-4BF0-BE1F-87D63EA114F7}.Release|ARM.ActiveCfg = Release|Win32
+		{E87DA3EF-9702-4BF0-BE1F-87D63EA114F7}.Release|Win32.ActiveCfg = Release|Win32
+		{E87DA3EF-9702-4BF0-BE1F-87D63EA114F7}.Release|Win32.Build.0 = Release|Win32
+		{E87DA3EF-9702-4BF0-BE1F-87D63EA114F7}.Release|x64.ActiveCfg = Release|Win32
 		{104A560C-661B-43C3-A7B0-4ED6AA386A30}.Debug|ARM.ActiveCfg = Debug|Win32
 		{104A560C-661B-43C3-A7B0-4ED6AA386A30}.Debug|Win32.ActiveCfg = Debug|Win32
 		{104A560C-661B-43C3-A7B0-4ED6AA386A30}.Debug|Win32.Build.0 = Debug|Win32

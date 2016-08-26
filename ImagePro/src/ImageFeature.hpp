@@ -1,5 +1,5 @@
-#ifndef IMAGEFEATURE_H_
-#define IMAGEFEATURE_H_
+#ifndef IMAGETEXTFEATURE_H_
+#define IMAGETEXTFEATURE_H_
 #endif
 
 #include "ImageProCom.h"
@@ -11,13 +11,32 @@
 #define GLCM_ANGLE_DIGONAL    2  //¶Ô½Ç  
 
 
-class IMAGEPRO_MODEL_EXPORT ImageFeature
+typedef enum LBP_MODE
+{
+	LBP_GRAY_INVARIANCE = 0,
+	LBP_ROTATION_INVARIANCE = 1,
+	LBP_UNIFORM_INVARIANCE = 2,
+	LBP_UNROTATION_INVARIANCE = 3,
+	LBP_ROTATION_INVARIANCE_THR = 4,
+	UNRESERVE
+};
+
+
+#define GRAY_BIN_CNT 64
+
+
+
+class IMAGEPRO_MODEL_EXPORT ImageTextFeature
 {
 public:
-	ImageFeature(Mat& srcMat);
+	ImageTextFeature(Mat& srcMat);
 	int calcGLCM(IplImage* bWavelet, int angleDirection, double* featureVector);
 
-	~ImageFeature();
+	void sheetLBPFeature(const Mat& src, const Mat& dst, int mode, int thr);
+	int getHopCount(uchar i);
+	void lbp59table(uchar* table);
+
+	~ImageTextFeature();
 
 private:
 	Mat m_srcMat;
