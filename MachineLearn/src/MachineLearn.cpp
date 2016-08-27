@@ -6,10 +6,6 @@ MachineLearn::MachineLearn()
 }
 
 
-
-#include "MachineLearn.h"
-#include "lppca.h"
-
 double g_MaxSimValue = 0.0;
 
 
@@ -70,22 +66,22 @@ String MachineLearn::getClsName(int iMlModel)
 	switch (iMlModel)
 	{
 	case 0:
-		sClsName = "LP_ML_RTREES";
+		sClsName = "ML_METHOD_RTREES";
 		break;
 	case 1:
-		sClsName = "LP_ML_ADABOOST";
+		sClsName = "ML_METHOD_ADABOOST";
 		break;
 	case 2:
-		sClsName = "LP_ML_MLP";
+		sClsName = "ML_METHOD_MLP";
 		break;
 	case 3:
-		sClsName = "LP_ML_KNN";
+		sClsName = "ML_METHOD_KNN";
 		break;
 	case 4:
-		sClsName = "LP_ML_NBAYES";
+		sClsName = "ML_METHOD_NBAYES";
 		break;
 	case 5:
-		sClsName = "LP_ML_SVM";
+		sClsName = "ML_METHOD_SVM";
 		break;
 	default:
 		break;

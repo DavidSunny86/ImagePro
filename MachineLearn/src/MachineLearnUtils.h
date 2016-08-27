@@ -5,6 +5,8 @@
 
 #include <opencv2/opencv.hpp>
 #include "ImageBaseUtils.h"
+#include "ml.hpp"
+
 using namespace std;
 using namespace cv;
 

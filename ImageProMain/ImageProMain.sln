@@ -19,6 +19,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Caterpillar", "..\Caterpill
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MachineVision", "..\MachineVision\MachineVision.vcxproj", "{104A560C-661B-43C3-A7B0-4ED6AA386A30}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MachineLearn", "..\MachineLearn\MachineLearn.vcxproj", "{C8384D75-8686-4F8C-A728-1BA8D631CEBD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM = Debug|ARM
@@ -77,6 +79,14 @@ Global
 		{104A560C-661B-43C3-A7B0-4ED6AA386A30}.Release|Win32.ActiveCfg = Release|Win32
 		{104A560C-661B-43C3-A7B0-4ED6AA386A30}.Release|Win32.Build.0 = Release|Win32
 		{104A560C-661B-43C3-A7B0-4ED6AA386A30}.Release|x64.ActiveCfg = Release|Win32
+		{C8384D75-8686-4F8C-A728-1BA8D631CEBD}.Debug|ARM.ActiveCfg = Debug|Win32
+		{C8384D75-8686-4F8C-A728-1BA8D631CEBD}.Debug|Win32.ActiveCfg = Debug|Win32
+		{C8384D75-8686-4F8C-A728-1BA8D631CEBD}.Debug|Win32.Build.0 = Debug|Win32
+		{C8384D75-8686-4F8C-A728-1BA8D631CEBD}.Debug|x64.ActiveCfg = Debug|Win32
+		{C8384D75-8686-4F8C-A728-1BA8D631CEBD}.Release|ARM.ActiveCfg = Release|Win32
+		{C8384D75-8686-4F8C-A728-1BA8D631CEBD}.Release|Win32.ActiveCfg = Release|Win32
+		{C8384D75-8686-4F8C-A728-1BA8D631CEBD}.Release|Win32.Build.0 = Release|Win32
+		{C8384D75-8686-4F8C-A728-1BA8D631CEBD}.Release|x64.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
