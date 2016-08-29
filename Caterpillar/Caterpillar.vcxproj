@@ -13,6 +13,9 @@
   <ItemGroup>
     <ClInclude Include="include\ImageBaseUtils.h" />
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\ImageBaseUtils.cpp" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{E87DA3EF-9702-4BF0-BE1F-87D63EA114F7}</ProjectGuid>
     <RootNamespace>Caterpillar</RootNamespace>

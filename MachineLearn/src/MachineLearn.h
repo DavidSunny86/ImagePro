@@ -1,5 +1,6 @@
 #pragma once
 #include "MachineLearnUtils.h"
+#include <stdlib.h>
 #include "ImageBaseUtils.h"
 #include "opencv2/ml/ml.hpp"
 
@@ -74,6 +75,64 @@ class MachineLearn
 {
 public:
 	MachineLearn();
+	
+	MachineLearn(String  clsModeSavePath, int iMlMode);
+
+	MachineLearn(String trainSamplePath, String clsModeSavePath, int iMlMode, int param0, int param1);
+	
+	List<Ml_Base_Feature> computerAllFeature(String dataPath, int mode);
+
+	IplImage* getImgFromBtnStyleNo(String btnStyleNo);
+
+	String getClsName(int iMlModel);
+
+	int buildMlClassfierSampleData(String trainPath, Mat* data, Mat* responsees, int iReducedDimMode);
+
+	Ptr<TrainData> prepareTrainData(const Mat& data, const Mat& responses, int ntrain_samples);
+
+	inline TermCriteria setIterCondition(int iters, double eps);
+
+	void testAndSaveClassifier(const Ptr<StatModel>& model, const Mat& data, const Mat& responses, int iMlModel,float ntrain_samples, int rdelta, char* resultPath, char* param1, char* param2);
+
+	void testAndSaveClassifier(const Ptr<StatModel>& model, const Mat& data, const Mat& responses, List<Ml_Base_Feature> srcSampleData, int iMlModel, float ntrain_samples, int rdelta, char* resultPath, char* param1, char* param2);
+
+	Ptr<StatModel> buildRtreesClassifier(Mat data, Mat  responses, int ntrain_samples, double maxDepth, double iter);
+
+	Ptr<StatModel> buildAdaboostClassifier(Mat data, Mat  responses, int ntrain_samples, double param0, double param1);
+
+	Ptr<StatModel> buildMlpClassifier(Mat data, Mat  responses, int ntrain_samples, double param0, double param1);
+
+	Ptr<StatModel> buildNbayesClassifier(Mat data, Mat  responses, int ntrain_samples);
+
+	Ptr<StatModel> buildKnnClassifier(Mat data, Mat  responses, int ntrain_samples, int K);
+
+	Ptr<StatModel> buildSvmClassifier(Mat data, Mat  responses, int ntrain_samples);
+
+	int predictCls(const Ptr<StatModel>& model, const Mat pendSample, int iMlModel);
+
+	int predictCls(const Mat pendSample, int iMlModel);
+
+	Ptr<StatModel> buildClassifier(Mat data, Mat response, float ration, int mode, double param0, double param1);
+
+	Ptr<StatModel> loadMlClassify(String clsPath, int iMlMode);
+
+	void loadMlCls(String clsPath, int iMlMode);
+
+	bool isLoadMlCls();
+
+	void buildMlClassfierTest(Mat data, Mat response, float ration, int iMlMode, char* resultPath, double params0);
+
+	List<Ml_Base_Feature> get10FoldCrossValidation(List<Ml_Base_Feature> allBtnFeature, int index);
+
+	void buildMlClassfierTest2(String trainPath, int iMlMode, char* testrResultPath, double param0, double param1);
+	
+	void buildMlClassfierTest2(List<Ml_Base_Feature> allBtnFeature, int iMlMode, char* testrResultPath, double param0, double param1);
+
+	int :buildMlClassfierAndSave(String trainPath, String mlModelSavePath, int iMlMode, double param0, double param1)     ;
+
+	Ptr<StatModel> buildBtnMlClassfier(String trainPath, int iMlMode, double param0, double param1);
+	
+	
 	~MachineLearn();
 
 public:

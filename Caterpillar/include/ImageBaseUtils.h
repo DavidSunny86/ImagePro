@@ -4,6 +4,8 @@
 #define IMAGEBASEUTILS_MODEL_EXPORT __declspec(dllimport)
 
 #include <opencv2/opencv.hpp>
+#include <stdlib.h>
+#include <stdio.h>
 using namespace std;
 using namespace cv;
 
@@ -31,6 +33,18 @@ typedef enum IMAGE_BASE_ERROR_CODE
 #define CT_NINE   (9) 
 #define CT_TEN    (10)
 #define CT_ZERO   (0)
+
+
+const string getCurrentSystemTime();
+
+long LastWishesCrashHandler(EXCEPTION_POINTERS *pException);
+
+
+
+
+
+
+
 
 
 
