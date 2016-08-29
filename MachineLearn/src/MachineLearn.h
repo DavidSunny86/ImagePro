@@ -2,6 +2,7 @@
 #include "MachineLearnUtils.h"
 #include <stdlib.h>
 #include "ImageBaseUtils.h"
+#include "ml.h"
 #include "opencv2/ml/ml.hpp"
 
 
