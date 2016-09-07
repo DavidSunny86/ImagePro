@@ -39,13 +39,14 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>..\..\Caterpillar\include;$(OPENCV)\include\opencv2\;$(OPENCV)\include\;$(OPENCV)\include\opencv\;$(IncludePath)</IncludePath>
+    <IncludePath>..\..\..\Caterpillar\include\;..\..\Caterpillar\include\;$(OPENCV)\include\opencv2\;$(OPENCV)\include\;$(OPENCV)\include\opencv\;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>$(OPENCV)\include\opencv2\;$(OPENCV)\include\;$(OPENCV)\include\opencv\;..\..\Caterpillar\include\;..\..\..\Caterpillar\include\;..\Caterpillar\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>

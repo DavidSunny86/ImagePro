@@ -1,8 +1,6 @@
 #pragma once
 #include "MachineLearnUtils.h"
 #include "ImageBaseUtils.h"
-#include "opencv2/ml/ml.hpp"
-
 
 typedef struct ML_BASE_FEATURE
 {
@@ -48,7 +46,6 @@ typedef enum ML_FEATURE_TYPE
 	ML_TEXT_GLCM,
 	ML_TEXT_HIST,
 	ML_FEATURE_MAX
-
 };
 
 
@@ -74,7 +71,50 @@ class MachineLearn
 {
 public:
 	MachineLearn();
+	MachineLearn(String  clsModeSavePath, int iMlMode);
+	MachineLearn(String trainSamplePath, String clsModeSavePath, int iMlMode, int param0, int param1);
+
+	Ptr<StatModel> loadMlClassify(String clsPath, int iMlMode);
+	void loadMlCls(String clsPath, int iMlMode);
+
+	int buildMlClassfierAndSave(String trainPath, String mlModelSavePath, int iMlMode, double param0, double param1);
+
+	int predictCls(const Ptr<StatModel>& model, const Mat pendSample, int iMlModel);
+
+	list<Ml_Base_Feature> computerFeature(String dataPath, int mode);
+
+	Ptr<TrainData> prepareTrainData(const Mat& data, const Mat& responses, int ntrain_samples);
+
+	int buildMlClassfierSampleData(String trainPath, Mat* data, Mat* responsees, int iReducedDimMode);
+
+	inline TermCriteria setIterCondition(int iters, double eps);
+
+	void buildMlClassfierTest(Mat data, Mat response, float ration, int iMlMode, char* resultPath, double params0);
+
+	void buildMlClassfierTest(String trainPath, int iMlMode, char* testrResultPath, double param0, double param1);
+
+	list<Ml_Base_Feature> get10FoldCrossValidation(list<Ml_Base_Feature> allFeature, int index);
+
+	bool isLoadMlCls();
+
 	~MachineLearn();
+
+private:
+
+	//随机树分类
+	Ptr<StatModel> buildRtreesClassifier(Mat data, Mat  responses, int ntrain_samples, double maxDepth, double iter);
+	
+	Ptr<StatModel> buildAdaboostClassifier(Mat data, Mat  responses, int ntrain_samples, double param0, double param1);
+	//多层感知机分类（ANN）
+	Ptr<StatModel> buildMlpClassifier(Mat data, Mat  responses, int ntrain_samples, double param0, double param1);
+
+	Ptr<StatModel> buildNbayesClassifier(Mat data, Mat  responses, int ntrain_samples);
+
+	Ptr<StatModel> buildKnnClassifier(Mat data, Mat  responses, int ntrain_samples, int K);
+
+	//svm分类
+	Ptr<StatModel> buildSvmClassifier(Mat data, Mat  responses, int ntrain_samples);
+
 
 public:
 
@@ -83,5 +123,3 @@ public:
 	int  m_iMlModel;
 	Ptr<StatModel> m_pMlCls;
 };
-
- 
