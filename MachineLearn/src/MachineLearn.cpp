@@ -6,13 +6,6 @@ MachineLearn::MachineLearn()
 }
 
 
-double g_MaxSimValue = 0.0;
-
-
-MachineLearn::MachineLearn()
-{
-}
-
 MachineLearn::MachineLearn(String  clsModeSavePath, int iMlMode)
 {
 	loadMlCls(clsModeSavePath, iMlMode);
@@ -29,7 +22,7 @@ MachineLearn::MachineLearn(String trainSamplePath, String clsModeSavePath, int i
 		return;
 	}
 
-	iRet = buildMlClassfierAndSave(trainSamplePath, clsModeSavePath, iMlMode, param0, param1);
+	iRet = buildBtnMlClassfierAndSave(trainSamplePath, clsModeSavePath, iMlMode, param0, param1);
 	if (iRet != 0)
 	{
 		return;
@@ -41,16 +34,16 @@ MachineLearn::MachineLearn(String trainSamplePath, String clsModeSavePath, int i
 }
 
 
-list<Ml_Base_Feature> MachineLearn::computerFeature(String dataPath, int mode)
+List<Ml_Base_Feature> MachineLearn::computerAllFeature(String dataPath, int mode)
 {
-	list<Ml_Base_Feature> Featurelist;
+	List<Ml_Base_Feature> AllFeatureList;
 
-	return Featurelist;
+	return AllFeatureList;
 }
 
-IplImage* MachineLearn::getImgFromStyleNo(String StyleNo)
+IplImage* MachineLearn::getImgFromBtnStyleNo(String btnStyleNo)
 {
-	if (StyleNo())
+	if (btnStyleNo())
 	{
 		return NULL;
 	}
@@ -63,10 +56,10 @@ String MachineLearn::getClsName(int iMlModel)
 	switch (iMlModel)
 	{
 	case 0:
-		sClsName = "ML_METHOD_ADABOOST";
+		sClsName = "ML_METHOD_RTREES";
 		break;
 	case 1:
-		sClsName = "ML_METHOD_RTREES";
+		sClsName = "ML_METHOD_ADABOOST";
 		break;
 	case 2:
 		sClsName = "ML_METHOD_MLP";
@@ -75,10 +68,10 @@ String MachineLearn::getClsName(int iMlModel)
 		sClsName = "ML_METHOD_KNN";
 		break;
 	case 4:
-		sClsName = "ML_METHOD_SVM";
+		sClsName = "ML_METHOD_NBAYES";
 		break;
 	case 5:
-		sClsName = "ML_METHOD_NBAYES";
+		sClsName = "ML_METHOD_SVM";
 		break;
 	default:
 		break;
@@ -91,9 +84,9 @@ String MachineLearn::getClsName(int iMlModel)
 
 int MachineLearn::buildMlClassfierSampleData(String trainPath, Mat* data, Mat* responsees, int iReducedDimMode)
 {
-	list <Ml_Base_Feature> allFeature = computerFeature(trainPath, computerFeatureMode);
+	List<Ml_Base_Feature> allFeature = computerAllFeature(trainPath, computerFeatureMode);
 	int iRet = 0;
-	int size = allFeature.size();
+	int size = allBtnFeature.size();
 	vector<int> responsees_temp;
 	Mat matTemp;
 
@@ -102,10 +95,11 @@ int MachineLearn::buildMlClassfierSampleData(String trainPath, Mat* data, Mat* r
 		return  -1;
 	}
 
-	for (auto temp : allFeature)
+	for (int i = 0; i < size; i++)
 	{
+		Ml_Base_Feature temp = allFeature.at(i);
 		responsees_temp.push_back(temp.iLabel);
-		matTemp.push_back(temp);
+		matTemp.push_back(temp.featureInfo);
 	}
 
 	Mat(matTemp).copyTo(*data);
@@ -141,15 +135,16 @@ inline TermCriteria MachineLearn::setIterCondition(int iters, double eps)
 void MachineLearn::testAndSaveClassifier(const Ptr<StatModel>& model, const Mat& data, const Mat& responses, int iMlModel,
 	float ntrain_samples, int rdelta, char* resultPath, char* param1, char* param2)
 {
+#if 0
 	int i, nsamples_all = data.rows;
 	int trainNum = nsamples_all*ntrain_samples;
 	double train_hr = 0;
 	double test_hr = 0;
-	ML_RPE_CLS_INFO PreCls[ML_CLASS_UNREV + 1] = { 0 };
+	ML_RPE_CLS_INFO preCls[ML_CLASS_UNREV + 1] = { 0 };
 
 	for (i = 0; i < ML_CLASS_UNREV + 1; i++)
 	{
-		PreCls[i] = { 0 };
+		BtnPreCls[i] = { 0 };
 	}
 
 	String mlStyle = getClsName(iMlModel);
@@ -170,7 +165,7 @@ void MachineLearn::testAndSaveClassifier(const Ptr<StatModel>& model, const Mat&
 	outSum << qSetFieldWidth(10) << left << mlStyle.c_str() << "  Save Result!!" << "\r\n";
 
 	// compute prediction error on train and test data
-	if (iMlModel == LP_ML_ADABOOST)
+	if (iMlModel == ML_METHOD_ADABOOST)
 	{
 		int var_count = data.cols;
 		int k, j, i;
@@ -199,27 +194,33 @@ void MachineLearn::testAndSaveClassifier(const Ptr<StatModel>& model, const Mat&
 
 			double r = std::abs(best_class - responses.at<int>(i)) < FLT_EPSILON ? 1 : 0;
 
-			PreCls[responses.at<int>(i)].srcClsStyle = getClsReTransefer(responses.at<int>(i));
-			PreCls[responses.at<int>(i)].sameStyleNum++;
+			BtnPreCls[responses.at<int>(i)].srcClsStyle = getBtnClsReTransefer(responses.at<int>(i));
+			BtnPreCls[responses.at<int>(i)].sameBtnStyleNum++;
+
+			//if (i >= trainNum && iFirstFlag == 0)
+			//{
+			//	iFirstFlag++;
+			//	outSum << qSetFieldWidth(10) << left << " Test Sample Begin!!" << "\r\n";
+			//}
 
 			if (i < trainNum)
 			{
 				train_hr += r;
-				PreCls[responses.at<int>(i)].iTrainNum++;
+				BtnPreCls[responses.at<int>(i)].iTrainNum++;
 				if (r > 0.5)
 				{
-					PreCls[responses.at<int>(i)].preTrainClsCurrentNum++;
+					BtnPreCls[responses.at<int>(i)].preTrainClsCurrentNum++;
 				}
-				/*		outSum << qSetFieldWidth(10) << left << "train-" << "src cls" << getClsReTransefer(responses.at<int>(i))<<" pre cls"<< getClsReTransefer((int)best_class) << "\r\n";*/
+				/*		outSum << qSetFieldWidth(10) << left << "train-" << "src cls" << getBtnClsReTransefer(responses.at<int>(i))<<" pre cls"<< getBtnClsReTransefer((int)best_class) << "\r\n";*/
 			}
 			else
 			{
-				PreCls[responses.at<int>(i)].iTestNum++;
+				BtnPreCls[responses.at<int>(i)].iTestNum++;
 				if (r > 0.5)
 				{
-					PreCls[responses.at<int>(i)].preTestClsCurrentNum++;
+					BtnPreCls[responses.at<int>(i)].preTestClsCurrentNum++;
 				}
-				//outSum << qSetFieldWidth(10) << left << "test-" << "src cls" << getClsReTransefer(responses.at<int>(i)) << " pre cls" << getClsReTransefer((int)best_class) << "\r\n";
+				//outSum << qSetFieldWidth(10) << left << "test-" << "src cls" << getBtnClsReTransefer(responses.at<int>(i)) << " pre cls" << getBtnClsReTransefer((int)best_class) << "\r\n";
 				test_hr += r;
 			}
 
@@ -234,8 +235,8 @@ void MachineLearn::testAndSaveClassifier(const Ptr<StatModel>& model, const Mat&
 			float r = model->predict(sample);
 			float comR = std::abs(r + rdelta - responses.at<int>(i)) <= FLT_EPSILON ? 1.f : 0.f;
 
-			PreCls[responses.at<int>(i)].srcClsStyle = getClsReTransefer(responses.at<int>(i));
-			PreCls[responses.at<int>(i)].sameStyleNum++;
+			BtnPreCls[responses.at<int>(i)].srcClsStyle = getBtnClsReTransefer(responses.at<int>(i));
+			BtnPreCls[responses.at<int>(i)].sameBtnStyleNum++;
 
 			//if (i >= trainNum && iFirstFlag == 0)
 			//{
@@ -245,22 +246,22 @@ void MachineLearn::testAndSaveClassifier(const Ptr<StatModel>& model, const Mat&
 
 			if (i <= trainNum)
 			{
-				PreCls[responses.at<int>(i)].iTrainNum++;
+				BtnPreCls[responses.at<int>(i)].iTrainNum++;
 				if (comR > 0.5)
 				{
-					PreCls[responses.at<int>(i)].preTrainClsCurrentNum++;
+					BtnPreCls[responses.at<int>(i)].preTrainClsCurrentNum++;
 				}
-				//outSum << qSetFieldWidth(10) << left << "train-" << "src cls" << getClsReTransefer(responses.at<int>(i)) << " pre cls" << getClsReTransefer((int)r) << "\r\n";
+				//outSum << qSetFieldWidth(10) << left << "train-" << "src cls" << getBtnClsReTransefer(responses.at<int>(i)) << " pre cls" << getBtnClsReTransefer((int)r) << "\r\n";
 				train_hr += comR;
 			}
 			else
 			{
-				PreCls[responses.at<int>(i)].iTestNum++;
+				BtnPreCls[responses.at<int>(i)].iTestNum++;
 				if (comR > 0.5)
 				{
-					PreCls[responses.at<int>(i)].preTestClsCurrentNum++;
+					BtnPreCls[responses.at<int>(i)].preTestClsCurrentNum++;
 				}
-				/*		outSum << qSetFieldWidth(10) << left << "test-" << "src cls" << getClsReTransefer(responses.at<int>(i)) << " pre cls" << getClsReTransefer((int)r) << "\r\n";*/
+				/*		outSum << qSetFieldWidth(10) << left << "test-" << "src cls" << getBtnClsReTransefer(responses.at<int>(i)) << " pre cls" << getBtnClsReTransefer((int)r) << "\r\n";*/
 				test_hr += comR;
 			}
 		}
@@ -273,36 +274,38 @@ void MachineLearn::testAndSaveClassifier(const Ptr<StatModel>& model, const Mat&
 		qSetFieldWidth(10) << left << param2 << "trainNum" << trainNum << qSetFieldWidth(1) << " TrainClsRatio =" << train_hr <<
 		qSetFieldWidth(10) << " TestClsRatio =" << test_hr << "\r\n";
 
-	for (int cls = 0; cls < LP__CLASS_UNREV; cls++)
+	for (int btncls = 0; btncls < ML_CLASS_UNREV; btncls++)
 	{
 
-		double trainHr = PreCls[cls].iTrainNum > 0 ? (PreCls[cls].preTrainClsCurrentNum*1.0) / (PreCls[cls].iTrainNum*1.0) : 0.0f;
-		double testHr = PreCls[cls].iTestNum > 0 ? (PreCls[cls].preTestClsCurrentNum*1.0) / (PreCls[cls].iTestNum*1.0) : 0.0f;
+		double trainHr = BtnPreCls[btncls].iTrainNum > 0 ? (BtnPreCls[btncls].preTrainClsCurrentNum*1.0) / (BtnPreCls[btncls].iTrainNum*1.0) : 0.0f;
+		double testHr = BtnPreCls[btncls].iTestNum > 0 ? (BtnPreCls[btncls].preTestClsCurrentNum*1.0) / (BtnPreCls[btncls].iTestNum*1.0) : 0.0f;
 
-		outSum << qSetFieldWidth(10) << left << PreCls[cls].srcClsStyle << qSetFieldWidth(10) << left << "All  Num" << PreCls[cls].sameStyleNum << qSetFieldWidth(10) << left << "trainNum" << PreCls[cls].iTrainNum << qSetFieldWidth(1) << " TrainClsRatio =" << trainHr <<
+		outSum << qSetFieldWidth(10) << left << BtnPreCls[btncls].srcClsStyle << qSetFieldWidth(10) << left << "All  Num" << BtnPreCls[btncls].sameBtnStyleNum << qSetFieldWidth(10) << left << "trainNum" << BtnPreCls[btncls].iTrainNum << qSetFieldWidth(1) << " TrainClsRatio =" << trainHr <<
 			qSetFieldWidth(10) << " TestClsRatio =" << testHr << "\r\n";
 	}
 
 
 	outSum.flush();
 	sumfile.close();
+#endif
 }
 
 
 //分类预测
-void MachineLearn::testAndSaveClassifier(const Ptr<StatModel>& model, const Mat& data, const Mat& responses, list<Ml_Base_Feature> srcSampleData, int iMlModel, float ntrain_samples, int rdelta, char* resultPath, char* param1, char* param2)
+void MachineLearn::testAndSaveClassifier(const Ptr<StatModel>& model, const Mat& data, const Mat& responses, List<Ml_Base_Feature> srcSampleData, int iMlModel, float ntrain_samples, int rdelta, char* resultPath, char* param1, char* param2)
 {
+#if 0
 	int i, nsamples_all = data.rows;
 	int trainNum = nsamples_all*ntrain_samples;
 	double train_hr = 0;
 	double test_hr = 0;
-	ML_RPE_CLS_INFO PreCls[ML_CLASS_UNREV + 1] = { 0 };
-	CLS_PREDICT_PRO ClsPrePro[ML_CLASS_UNREV + 1];
+	BTN_RPE_CLS_INFO BtnPreCls[ML_CLASS_UNREV + 1] = { 0 };
+	BTNCLS_PREDICT_PRO btnClsPrePro[ML_CLASS_UNREV + 1];
 
 	for (i = 0; i < ML_CLASS_UNREV + 1; i++)
 	{
-		PreCls[i] = { 0 };
-		ClsPrePro[i] = { 0 };
+		BtnPreCls[i] = { 0 };
+		btnClsPrePro[i] = { 0 };
 	}
 
 	String mlStyle = getClsName(iMlModel);
@@ -345,7 +348,7 @@ void MachineLearn::testAndSaveClassifier(const Ptr<StatModel>& model, const Mat&
 	}
 
 	// compute prediction error on train and test data
-	if (iMlModel == ML_METHOD_ADABOOST)
+	if (iMlModel == LP_ML_ADABOOST)
 	{
 		int var_count = data.cols;
 		int k, j, i;
@@ -374,8 +377,8 @@ void MachineLearn::testAndSaveClassifier(const Ptr<StatModel>& model, const Mat&
 
 			double r = std::abs(best_class - responses.at<int>(i)) < FLT_EPSILON ? 1 : 0;
 
-			PreCls[responses.at<int>(i)].srcClsStyle = getClsReTransefer(responses.at<int>(i));
-			PreCls[responses.at<int>(i)].sameStyleNum++;
+			BtnPreCls[responses.at<int>(i)].srcClsStyle = getBtnClsReTransefer(responses.at<int>(i));
+			BtnPreCls[responses.at<int>(i)].sameBtnStyleNum++;
 
 			//if (i >= trainNum && iFirstFlag == 0)
 			//{
@@ -386,38 +389,38 @@ void MachineLearn::testAndSaveClassifier(const Ptr<StatModel>& model, const Mat&
 			if (i < trainNum)
 			{
 				train_hr += r;
-				PreCls[responses.at<int>(i)].iTrainNum++;
+				BtnPreCls[responses.at<int>(i)].iTrainNum++;
 				if (r > 0.5)
 				{
-					PreCls[responses.at<int>(i)].preTrainClsCurrentNum++;
+					BtnPreCls[responses.at<int>(i)].preTrainClsCurrentNum++;
 				}
 
-				PreCls[responses.at<int>(i)].preTrainClsPre[best_class]++;
-				/*		outSum << qSetFieldWidth(10) << left << "train-" << "src cls" << getClsReTransefer(responses.at<int>(i))<<" pre cls"<< getClsReTransefer((int)best_class) << "\r\n";*/
+				BtnPreCls[responses.at<int>(i)].preTrainClsPre[best_class]++;
+				/*		outSum << qSetFieldWidth(10) << left << "train-" << "src cls" << getBtnClsReTransefer(responses.at<int>(i))<<" pre cls"<< getBtnClsReTransefer((int)best_class) << "\r\n";*/
 			}
 			else
 			{
-				PreCls[responses.at<int>(i)].iTestNum++;
-				PreCls[responses.at<int>(i)].preTestClsPre[best_class]++;
+				BtnPreCls[responses.at<int>(i)].iTestNum++;
+				BtnPreCls[responses.at<int>(i)].preTestClsPre[best_class]++;
 				if (r > 0.5)
 				{
-					PreCls[responses.at<int>(i)].preTestClsCurrentNum++;
+					BtnPreCls[responses.at<int>(i)].preTestClsCurrentNum++;
 				}
 				else
 				{
-					String StyleNo = srcSampleData.at(i).sLable;
-					IplImage* pCurImg = getImgFromStyleNo(srcSampleData.at(i).sLable);
-					String preCls = getClsReTransefer(best_class);
-					String ImgSavePath = sSaveBasePath + "/" + StyleNo.toStdString() + "_" + preCls.toStdString() + ".png";
-					cvSaveImage(ImgSavePath.c_str(), pCurImg);
+					String btnStyleNo = srcSampleData.at(i).sBtnLable;
+					IplImage* pCurImg = getImgFromBtnStyleNo(srcSampleData.at(i).sBtnLable);
+					String preCls = getBtnClsReTransefer(best_class);
+					String btnImgSavePath = sSaveBasePath + "/" + btnStyleNo.toStdString() + "_" + preCls.toStdString() + ".png";
+					cvSaveImage(btnImgSavePath.c_str(), pCurImg);
 					cvReleaseImage(&pCurImg);
 
-					ClsPrePro[responses.at<int>(i)].SrcCls = responses.at<int>(i);
-					ClsPrePro[responses.at<int>(i)].PreCls[best_class]++;
+					btnClsPrePro[responses.at<int>(i)].btnSrcCls = responses.at<int>(i);
+					btnClsPrePro[responses.at<int>(i)].btnPreCls[best_class]++;
 
 				}
 
-				//outSum << qSetFieldWidth(10) << left << "test-" << "src cls" << getClsReTransefer(responses.at<int>(i)) << " pre cls" << getClsReTransefer((int)best_class) << "\r\n";
+				//outSum << qSetFieldWidth(10) << left << "test-" << "src cls" << getBtnClsReTransefer(responses.at<int>(i)) << " pre cls" << getBtnClsReTransefer((int)best_class) << "\r\n";
 				test_hr += r;
 			}
 
@@ -432,8 +435,8 @@ void MachineLearn::testAndSaveClassifier(const Ptr<StatModel>& model, const Mat&
 			float r = model->predict(sample);
 			float comR = std::abs(r + rdelta - responses.at<int>(i)) <= FLT_EPSILON ? 1.f : 0.f;
 
-			PreCls[responses.at<int>(i)].srcClsStyle = getClsReTransefer(responses.at<int>(i));
-			PreCls[responses.at<int>(i)].sameStyleNum++;
+			BtnPreCls[responses.at<int>(i)].srcClsStyle = getBtnClsReTransefer(responses.at<int>(i));
+			BtnPreCls[responses.at<int>(i)].sameBtnStyleNum++;
 
 			//if (i >= trainNum && iFirstFlag == 0)
 			//{
@@ -443,32 +446,32 @@ void MachineLearn::testAndSaveClassifier(const Ptr<StatModel>& model, const Mat&
 
 			if (i <= trainNum)
 			{
-				PreCls[responses.at<int>(i)].iTrainNum++;
-				PreCls[responses.at<int>(i)].preTrainClsPre[(int)r]++;
+				BtnPreCls[responses.at<int>(i)].iTrainNum++;
+				BtnPreCls[responses.at<int>(i)].preTrainClsPre[(int)r]++;
 				if (comR > 0.5)
 				{
-					PreCls[responses.at<int>(i)].preTrainClsCurrentNum++;
+					BtnPreCls[responses.at<int>(i)].preTrainClsCurrentNum++;
 				}
-				//outSum << qSetFieldWidth(10) << left << "train-" << "src cls" << getClsReTransefer(responses.at<int>(i)) << " pre cls" << getClsReTransefer((int)r) << "\r\n";
+				//outSum << qSetFieldWidth(10) << left << "train-" << "src cls" << getBtnClsReTransefer(responses.at<int>(i)) << " pre cls" << getBtnClsReTransefer((int)r) << "\r\n";
 				train_hr += comR;
 			}
 			else
 			{
-				PreCls[responses.at<int>(i)].iTestNum++;
-				PreCls[responses.at<int>(i)].preTestClsPre[(int)r]++;
+				BtnPreCls[responses.at<int>(i)].iTestNum++;
+				BtnPreCls[responses.at<int>(i)].preTestClsPre[(int)r]++;
 				if (comR > 0.5)
 				{
-					PreCls[responses.at<int>(i)].preTestClsCurrentNum++;
+					BtnPreCls[responses.at<int>(i)].preTestClsCurrentNum++;
 				}
-				/*		outSum << qSetFieldWidth(10) << left << "test-" << "src cls" << getClsReTransefer(responses.at<int>(i)) << " pre cls" << getClsReTransefer((int)r) << "\r\n";*/
+				/*		outSum << qSetFieldWidth(10) << left << "test-" << "src cls" << getBtnClsReTransefer(responses.at<int>(i)) << " pre cls" << getBtnClsReTransefer((int)r) << "\r\n";*/
 
 				else
 				{
-					String StyleNo = srcSampleData.at(i).sLable;
-					IplImage* pCurImg = getImgFromStyleNo(srcSampleData.at(i).sLable);
-					String preCls = getClsReTransefer(r);
-					String ImgSavePath = sSaveBasePath + "/" + StyleNo.toStdString() + "_" + preCls.toStdString() + ".png";
-					cvSaveImage(ImgSavePath.c_str(), pCurImg);
+					String btnStyleNo = srcSampleData.at(i).sBtnLable;
+					IplImage* pCurImg = getImgFromBtnStyleNo(srcSampleData.at(i).sBtnLable);
+					String preCls = getBtnClsReTransefer(r);
+					String btnImgSavePath = sSaveBasePath + "/" + btnStyleNo.toStdString() + "_" + preCls.toStdString() + ".png";
+					cvSaveImage(btnImgSavePath.c_str(), pCurImg);
 					cvReleaseImage(&pCurImg);
 				}
 
@@ -488,30 +491,30 @@ void MachineLearn::testAndSaveClassifier(const Ptr<StatModel>& model, const Mat&
 	outSum.flush();
 	sumfile.close();
 
-	for (int cls = 0; cls < LP_CLASS_UNREV; cls++)
+	for (int btncls = 0; btncls < ML_CLASS_UNREV; btncls++)
 	{
 
-		double trainHr = PreCls[cls].iTrainNum > 0 ? (PreCls[cls].preTrainClsCurrentNum*1.0) / (PreCls[cls].iTrainNum*1.0) : 0.0f;
-		double testHr = PreCls[cls].iTestNum > 0 ? (PreCls[cls].preTestClsCurrentNum*1.0) / (PreCls[cls].iTestNum*1.0) : 0.0f;
+		double trainHr = BtnPreCls[btncls].iTrainNum > 0 ? (BtnPreCls[btncls].preTrainClsCurrentNum*1.0) / (BtnPreCls[btncls].iTrainNum*1.0) : 0.0f;
+		double testHr = BtnPreCls[btncls].iTestNum > 0 ? (BtnPreCls[btncls].preTestClsCurrentNum*1.0) / (BtnPreCls[btncls].iTestNum*1.0) : 0.0f;
 
-		double train0 = PreCls[cls].preTrainClsPre[0] * 1.0 / PreCls[cls].iTrainNum*1.0;
-		double train1 = PreCls[cls].preTrainClsPre[1] * 1.0 / PreCls[cls].iTrainNum*1.0;
-		double train2 = PreCls[cls].preTrainClsPre[2] * 1.0 / PreCls[cls].iTrainNum*1.0;
+		double train0 = BtnPreCls[btncls].preTrainClsPre[0] * 1.0 / BtnPreCls[btncls].iTrainNum*1.0;
+		double train1 = BtnPreCls[btncls].preTrainClsPre[1] * 1.0 / BtnPreCls[btncls].iTrainNum*1.0;
+		double train2 = BtnPreCls[btncls].preTrainClsPre[2] * 1.0 / BtnPreCls[btncls].iTrainNum*1.0;
 
-		double test0 = PreCls[cls].preTestClsPre[0] * 1.0 / PreCls[cls].iTestNum*1.0;
-		double test1 = PreCls[cls].preTestClsPre[1] * 1.0 / PreCls[cls].iTestNum*1.0;
-		double test2 = PreCls[cls].preTestClsPre[2] * 1.0 / PreCls[cls].iTestNum*1.0;
+		double test0 = BtnPreCls[btncls].preTestClsPre[0] * 1.0 / BtnPreCls[btncls].iTestNum*1.0;
+		double test1 = BtnPreCls[btncls].preTestClsPre[1] * 1.0 / BtnPreCls[btncls].iTestNum*1.0;
+		double test2 = BtnPreCls[btncls].preTestClsPre[2] * 1.0 / BtnPreCls[btncls].iTestNum*1.0;
 
 
-		clsStr << qSetFieldWidth(10) << left << PreCls[cls].srcClsStyle << qSetFieldWidth(10) << left << "All  Num" << qSetFieldWidth(5) << PreCls[cls].sameStyleNum << qSetFieldWidth(10) << left << "trainNum" << qSetFieldWidth(5) << PreCls[cls].iTrainNum << qSetFieldWidth(15) << " TrainClsRatio =" <<
+		clsStr << qSetFieldWidth(10) << left << BtnPreCls[btncls].srcClsStyle << qSetFieldWidth(10) << left << "All  Num" << qSetFieldWidth(5) << BtnPreCls[btncls].sameBtnStyleNum << qSetFieldWidth(10) << left << "trainNum" << qSetFieldWidth(5) << BtnPreCls[btncls].iTrainNum << qSetFieldWidth(15) << " TrainClsRatio =" <<
 			qSetFieldWidth(10) << trainHr << qSetFieldWidth(15) << " TestClsRatio =" << qSetFieldWidth(10) << testHr << "Train  " <<
-			qSetFieldWidth(1) << PreCls[cls].srcClsStyle << "-" << "E=" << qSetFieldWidth(10) << train0 <<
-			qSetFieldWidth(1) << PreCls[cls].srcClsStyle << "-" << "F=" << qSetFieldWidth(10) << train1 <<
-			qSetFieldWidth(1) << PreCls[cls].srcClsStyle << "-" << "S=" << qSetFieldWidth(10) << train2 <<
+			qSetFieldWidth(1) << BtnPreCls[btncls].srcClsStyle << "-" << "E=" << qSetFieldWidth(10) << train0 <<
+			qSetFieldWidth(1) << BtnPreCls[btncls].srcClsStyle << "-" << "F=" << qSetFieldWidth(10) << train1 <<
+			qSetFieldWidth(1) << BtnPreCls[btncls].srcClsStyle << "-" << "S=" << qSetFieldWidth(10) << train2 <<
 			"Test  " <<
-			qSetFieldWidth(1) << PreCls[cls].srcClsStyle << "-" << "E=" << qSetFieldWidth(10) << test0 <<
-			qSetFieldWidth(1) << PreCls[cls].srcClsStyle << "-" << "F=" << qSetFieldWidth(10) << test1 <<
-			qSetFieldWidth(1) << PreCls[cls].srcClsStyle << "-" << "S=" << qSetFieldWidth(10) << test2 <<
+			qSetFieldWidth(1) << BtnPreCls[btncls].srcClsStyle << "-" << "E=" << qSetFieldWidth(10) << test0 <<
+			qSetFieldWidth(1) << BtnPreCls[btncls].srcClsStyle << "-" << "F=" << qSetFieldWidth(10) << test1 <<
+			qSetFieldWidth(1) << BtnPreCls[btncls].srcClsStyle << "-" << "S=" << qSetFieldWidth(10) << test2 <<
 			qSetFieldWidth(10)
 
 			<< "\r\n";
@@ -529,7 +532,7 @@ void MachineLearn::testAndSaveClassifier(const Ptr<StatModel>& model, const Mat&
 		g_MaxSimValue = test_hr;
 	}
 	return;
-
+#endif
 }
 
 
@@ -715,104 +718,11 @@ int MachineLearn::predictCls(const Ptr<StatModel>& model, const Mat pendSample, 
 }
 
 
-int MachineLearn::predictCls(const Ptr<StatModel>& model, lppca pca, const Mat pendSample, int iMlModel)
-{
-	Mat pcaTemp;
-	int iRet = 0;
-
-	if (!pca.m_bIsBuildPca)
-	{
-		return  -1;
-	}
-
-	iRet = pca.getReductDimMat(pendSample, &pcaTemp);
-	int iCls = predictCls(model, pendSample, iMlModel);
-
-	if (iRet != 0 || iCls < 0)
-	{
-		return -1;
-	}
-	return  iCls;
-}
-
-int  MachineLearn::predictClsVote(vector<CLS_PREDICT_VOTE> PredictVote, int strictMode)
-{
-	int Precls[ML_CLASS_UNREV] = { 0 };
-	bool bIsVote = false;
-	int BoostPre = ML_CLASS_UNREV;
-	for (int i = 0; i < PredictVote.size(); i++)
-	{
-		int Cls = PredictVote.at(i).PreCls;
-		Precls[Cls]++;
-
-		if (PredictVote.at(i).mlMode == LP_ML_ADABOOST)
-			BoostPre = Cls;
-	}
-
-	// 严格投票，只有全票通过才归为一类，否则就归为简单类
-	if (strictMode)
-	{
-		for (int i = 0; i < LP__CLASS_UNREV; i++)
-		{
-			if (Precls[i] == (LP__CLASS_UNREV - 1))
-			{
-				bIsVote = true;
-				return i;
-			}
-		}
-
-		if (bIsVote == false)
-		{
-			return LP__CLASS_COARSE_GRAIN;
-		}
-	}
-	else
-	{
-		for (int i = 0; i < LP__CLASS_UNREV; i++)
-		{
-			if (Precls[i] > 1)
-			{
-				bIsVote = true;
-				return i;
-			}
-		}
-
-		if (!bIsVote)
-		{
-			return  LP__CLASS_COARSE_GRAIN;
-		}
-	}
-
-	return LP__CLASS_COARSE_GRAIN;
-}
-
-/*针对不同种类进行判断 */
-int MachineLearn::predictClsVote(vector<CLS_PREDICT_VOTE> PredictVote, double* ClsPrePro)
-{
-	int Precls[LP__CLASS_UNREV] = { 0 };
-	bool bIsVote = false;
-	int BoostPre = LP__CLASS_UNREV;
-
-	for (int i = 0; i < PredictVote.size(); i++)
-	{
-		int Cls = PredictVote.at(i).PreCls;
-		Precls[Cls]++;
-	}
-
-	for (int i = 0; i < LP__CLASS_UNREV; i++)
-	{
-		ClsPrePro[i] = Precls[i] * 1.0 / (LP__CLASS_UNREV - 1)*1.0;
-	}
-
-	return 0;
-}
-
-
 int MachineLearn::predictCls(const Mat pendSample, int iMlModel)
 {
 	if (m_bIsLoadClsModel)
 	{
-		if (iMlModel == LP_ML_ADABOOST)
+		if (iMlModel == ML_METHOD_ADABOOST)
 		{
 			int var_count = pendSample.cols;
 			int k, j, best_class;
@@ -855,22 +765,22 @@ Ptr<StatModel> MachineLearn::buildClassifier(Mat data, Mat response, float ratio
 
 	switch (mode)
 	{
-	case LP_ML_RTREES:
+	case ML_METHOD_RTREES:
 		pClsModel = buildRtreesClassifier(data, response, ntrain_samples, param0, param1);
 		break;
-	case LP_ML_ADABOOST:
+	case ML_METHOD_ADABOOST:
 		pClsModel = buildAdaboostClassifier(data, response, ntrain_samples, param0, param1);
 		break;
-	case LP_ML_MLP:
+	case ML_METHOD_MLP:
 		pClsModel = buildMlpClassifier(data, response, ntrain_samples, param0, param1);
 		break;
-	case LP_ML_KNN:
+	case ML_METHOD_KNN:
 		pClsModel = buildKnnClassifier(data, response, ntrain_samples, param0);
 		break;
-	case LP_ML_NBAYES:
+	case ML_METHOD_NBAYES:
 		pClsModel = buildNbayesClassifier(data, response, ntrain_samples);
 		break;
-	case LP_ML_SVM:
+	case ML_METHOD_SVM:
 		pClsModel = buildSvmClassifier(data, response, ntrain_samples);
 		break;
 	default:
@@ -1045,7 +955,7 @@ void MachineLearn::loadMlCls(String clsPath, int iMlMode)
 	return;
 }
 
-bool MachineLearn::isLoadMlCls()
+bool MachineLearn::MachineLearn::isLoadMlCls()
 {
 	return m_bIsLoadClsModel;
 }
@@ -1063,53 +973,39 @@ void MachineLearn::buildMlClassfierTest(Mat data, Mat response, float ration, in
 	return;
 }
 
-void MachineLearn::buildMlClassfierTest(String trainPath, int iMlMode, char* testrResultPath, double param0, double param1)
+
+
+List<Ml_Base_Feature> MachineLearn::get10FoldCrossValidation(List<Ml_Base_Feature> allBtnFeature, int index)
 {
-	//建立训练样本
-	Mat trainData;
-	Mat trainLabel;
+	//allBtnFeature  为有序链表
 
-	for (int i = 1; i < 11; i++)
-	{
-		buildMlClassfierSampleData(trainPath, &trainData, &trainLabel, LP_ML_REDUCED_DIM_PCA);
-		//建立模型
-		buildMlClassfierTest(trainData, trainLabel, 0.8, iMlMode, testrResultPath, param0);
-	}
+	List<Ml_Base_Feature> qlTestSample;
+	List<Ml_Base_Feature> qlTrainSample;
+	List<List<Ml_Base_Feature>> qlBtnCLsList;
 
-	return;
-}
-
-list <Ml_Base_Feature> MachineLearn::get10FoldCrossValidation(list<Ml_Base_Feature> allFeature, int index)
-{
-	//allFeature  为有序链表
-
-	list<Ml_Base_Feature> qlTestSample;
-	list<Ml_Base_Feature> qlTrainSample;
-	list<list<Ml_Base_Feature>> qlCLslist;
-
-	int ClsArr[ML_CLASS_UNREV] = { 0 };
+	int btnClsArr[ML_CLASS_UNREV] = { 0 };
 	String spilteSyl = "_";
 
 	for (int cls = 0; cls < ML_CLASS_UNREV; cls++)
 	{
-		list<Ml_Base_Feature> temp;
+		List<Ml_Base_Feature> temp;
 
-		for (int i = 0; i < allFeature.size(); i++)
+		for (int i = 0; i < allBtnFeature.size(); i++)
 		{
-			int ClsIndex = allFeature.at(i).iLabel;
-			ClsArr[ClsIndex]++;
-			if (ClsIndex == cls)
+			int btnClsIndex = allBtnFeature.at(i).iBtnLabel;
+			btnClsArr[btnClsIndex]++;
+			if (btnClsIndex == cls)
 			{
-				temp.push_back(allFeature.at(i));
+				temp.push_back(allBtnFeature.at(i));
 			}
 		}
-		qlCLslist.push_back(temp);
+		qlBtnCLsList.push_back(temp);
 	}
 
 
 	for (int cls = 0; cls < ML_CLASS_UNREV; cls++)
 	{
-		list<Ml_Base_Feature> temp = qlCLslist.at(cls);
+		List<Ml_Base_Feature> temp = qlBtnCLsList.at(cls);
 		float space = temp.size()*1.0 / 10;
 
 		for (int i = 0; i < temp.size(); i++)
@@ -1139,8 +1035,8 @@ void MachineLearn::buildMlClassfierTest2(String trainPath, int iMlMode, char* te
 	int iRet = 0;
 	int isize = 0;
 	int iTestIndex = 0;
-	list<Ml_Base_Feature> allFeature = computerFeature(trainPath, computerFeatureMode);
-	isize = allFeature.size();
+	List<Ml_Base_Feature> allBtnFeature = computerBtnFeature(String::fromStdString(trainPath), computerBtnFeatureMode);
+	isize = allBtnFeature.size();
 
 	if (isize == 0)
 	{
@@ -1153,27 +1049,17 @@ void MachineLearn::buildMlClassfierTest2(String trainPath, int iMlMode, char* te
 		Mat trainLabel;
 		Mat matTemp;
 		vector<int> responsees_temp;
-		//random_shuffle(allFeature.begin(), allFeature.end());
+		//random_shuffle(allBtnFeature.begin(), allBtnFeature.end());
 
-		list<Ml_Base_Feature> templist = get10FoldCrossValidation(allFeature, iTestIndex);
-
-		for (auto temp : allFeature)
+		List<Ml_Base_Feature> tempList = get10FoldCrossValidation(allBtnFeature, iTestIndex);
+		for (int i = 0; i < isize; i++)
 		{
+			Ml_Base_Feature temp = tempList.at(i);
 			responsees_temp.push_back(temp.iLabel);
 			matTemp.push_back(temp.featureInfo);
 		}
 
 		Mat(responsees_temp).copyTo(trainLabel);
-
-		if (LP_ML_REDUCED_DIM_PCA == param1)
-		{
-			lppca lpPcaTemp(matTemp, matTemp.rows, 0.9);
-			trainData = lpPcaTemp.getFeatureReductionDimData();
-		}
-		else
-		{
-			trainData = matTemp;
-		}
 
 		Ptr<StatModel> pClsModel;
 		char cParam0[20];
@@ -1183,7 +1069,7 @@ void MachineLearn::buildMlClassfierTest2(String trainPath, int iMlMode, char* te
 		pClsModel = buildClassifier(trainData, trainLabel, 0.9, iMlMode, param0, param1);
 
 		//保存测试结果
-		testAndSaveClassifier(pClsModel, trainData, trainLabel, templist, iMlMode, 0.9, 0, testrResultPath, cParam0, cParam1);
+		testAndSaveClassifier(pClsModel, trainData, trainLabel, tempList, iMlMode, 0.9, 0, testrResultPath, cParam0, cParam1);
 
 		responsees_temp.clear();
 	}
@@ -1191,11 +1077,11 @@ void MachineLearn::buildMlClassfierTest2(String trainPath, int iMlMode, char* te
 	return;
 }
 
-void MachineLearn::buildMlClassfierTest2(list<Ml_Base_Feature> allFeature, int iMlMode, char* testrResultPath, double param0, double param1)
+void MachineLearn::buildMlClassfierTest2(List<Ml_Base_Feature> allBtnFeature, int iMlMode, char* testrResultPath, double param0, double param1)
 {
 	//建立训练样本
 	int iTestIndex = 0;
-	int isize = allFeature.size();
+	int isize = allBtnFeature.size();
 
 	if (isize == 0)
 	{
@@ -1209,29 +1095,19 @@ void MachineLearn::buildMlClassfierTest2(list<Ml_Base_Feature> allFeature, int i
 		Mat matTemp;
 		vector<int> responsees_temp;
 
-		list<Ml_Base_Feature> templist = get10FoldCrossValidation(allFeature, iTestIndex);
+		List<Ml_Base_Feature> tempList = get10FoldCrossValidation(allBtnFeature, iTestIndex);
 		for (int i = 0; i < isize; i++)
 		{
-			Ml_Base_Feature temp = templist.at(i);
-			if (!temp.FeatureInfo.empty())
+			Ml_Base_Feature temp = tempList.at(i);
+			if (!temp.featureInfo.empty())
 			{
-				matTemp.push_back(temp.FeatureInfo);
+				matTemp.push_back(temp.featureInfo);
 				responsees_temp.push_back(temp.iLabel);
 			}
 		}
 
 		Mat(responsees_temp).copyTo(trainLabel);
-
-		if (LP_ML_REDUCED_DIM_PCA == param1)
-		{
-			lppca lpPcaTemp(matTemp, matTemp.rows, 0.8);
-			trainData = lpPcaTemp.getFeatureReductionDimData();
-		}
-		else
-		{
 			trainData = matTemp;
-		}
-
 		Ptr<StatModel> pClsModel;
 		pClsModel = buildClassifier(trainData, trainLabel, 0.9, iMlMode, param0, param1);
 
@@ -1241,7 +1117,7 @@ void MachineLearn::buildMlClassfierTest2(list<Ml_Base_Feature> allFeature, int i
 		sprintf(cParam1, "%.4lf", param1);
 
 		//保存测试结果
-		testAndSaveClassifier(pClsModel, trainData, trainLabel, templist, iMlMode, 0.9, 0, testrResultPath, cParam0, cParam1);
+		testAndSaveClassifier(pClsModel, trainData, trainLabel, tempList, iMlMode, 0.9, 0, testrResultPath, cParam0, cParam1);
 
 		responsees_temp.clear();
 	}
@@ -1259,7 +1135,7 @@ int MachineLearn::buildMlClassfierAndSave(String trainPath, String mlModelSavePa
 	//建立训练样本
 	Mat trainData;
 	Mat trainLabel;
-	buildMlClassfierSampleData(String::fromStdString(trainPath), &trainData, &trainLabel);
+	buildMlClassfierBtnSampleData(trainPath, &trainData, &trainLabel);
 
 	//建立模型
 	Ptr<StatModel> pClsModel;
@@ -1278,7 +1154,7 @@ int MachineLearn::buildMlClassfierAndSave(String trainPath, String mlModelSavePa
 	return 0;
 }
 
-Ptr<StatModel> MachineLearn::buildMlClassfier(String trainPath, int iMlMode, double param0, double param1)
+Ptr<StatModel> MachineLearn::buildBtnMlClassfier(String trainPath, int iMlMode, double param0, double param1)
 {
 	//建立模型
 	Ptr<StatModel> pClsModel;
@@ -1289,7 +1165,7 @@ Ptr<StatModel> MachineLearn::buildMlClassfier(String trainPath, int iMlMode, dou
 	//建立训练样本
 	Mat trainData;
 	Mat trainLabel;
-	buildMlClassfierSampleData(String::fromStdString(trainPath), &trainData, &trainLabel);
+	buildMlClassfierBtnSampleData(trainPath, &trainData, &trainLabel);
 
 	//建立模型
 	pClsModel = buildClassifier(trainData, trainLabel, 1, iMlMode, param0);
@@ -1301,8 +1177,4 @@ Ptr<StatModel> MachineLearn::buildMlClassfier(String trainPath, int iMlMode, dou
 MachineLearn::~MachineLearn()
 {
 
-}
-
-MachineLearn::~MachineLearn()
-{
 }
