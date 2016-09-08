@@ -79,9 +79,6 @@ String MachineLearn::getClsName(int iMlModel)
 
 	return sClsName;
 }
-
-
-
 int MachineLearn::buildMlClassfierSampleData(String trainPath, Mat* data, Mat* responsees, int iReducedDimMode)
 {
 	list <Ml_Base_Feature> allFeature = computerFeature(trainPath, computerFeatureMode);
@@ -108,7 +105,6 @@ int MachineLearn::buildMlClassfierSampleData(String trainPath, Mat* data, Mat* r
 	return 0;
 }
 
-//准备训练数据
 Ptr<TrainData> MachineLearn::prepareTrainData(const Mat& data, const Mat& responses, int ntrain_samples)
 {
 	Mat sample_idx = Mat::zeros(1, data.rows, CV_8U);
@@ -124,13 +120,11 @@ Ptr<TrainData> MachineLearn::prepareTrainData(const Mat& data, const Mat& respon
 		noArray(), sample_idx, noArray(), var_type);
 }
 
-//设置迭代条件
 inline TermCriteria MachineLearn::setIterCondition(int iters, double eps)
 {
 	return TermCriteria(TermCriteria::MAX_ITER + (eps > 0 ? TermCriteria::EPS : 0), iters, eps);
 }
 
-//分类预测
 void MachineLearn::testAndSaveClassifier(const Ptr<StatModel>& model, const Mat& data, const Mat& responses, int iMlModel,
 	float ntrain_samples, int rdelta, char* resultPath, char* param1, char* param2)
 {
@@ -163,7 +157,7 @@ void MachineLearn::testAndSaveClassifier(const Ptr<StatModel>& model, const Mat&
 	outSum << qSetFieldWidth(10) << left << mlStyle.c_str() << "  Save Result!!" << "\r\n";
 
 	// compute prediction error on train and test data
-	if (iMlModel == LP_ML_ADABOOST)
+	if (iMlModel == ML_METHOD_ADABOOST)
 	{
 		int var_count = data.cols;
 		int k, j, i;
@@ -230,12 +224,6 @@ void MachineLearn::testAndSaveClassifier(const Ptr<StatModel>& model, const Mat&
 			PreCls[responses.at<int>(i)].srcClsStyle = getClsReTransefer(responses.at<int>(i));
 			PreCls[responses.at<int>(i)].sameStyleNum++;
 
-			//if (i >= trainNum && iFirstFlag == 0)
-			//{
-			//	iFirstFlag++;
-			//	outSum << qSetFieldWidth(10) << left << " Test Sample Begin!!" << "\r\n";
-			//}
-
 			if (i <= trainNum)
 			{
 				PreCls[responses.at<int>(i)].iTrainNum++;
@@ -282,15 +270,17 @@ void MachineLearn::testAndSaveClassifier(const Ptr<StatModel>& model, const Mat&
 }
 
 
-//分类预测
 void MachineLearn::testAndSaveClassifier(const Ptr<StatModel>& model, const Mat& data, const Mat& responses, list<Ml_Base_Feature> srcSampleData, int iMlModel, float ntrain_samples, int rdelta, char* resultPath, char* param1, char* param2)
 {
+
+#if 0
 	int i, nsamples_all = data.rows;
 	int trainNum = nsamples_all*ntrain_samples;
 	double train_hr = 0;
 	double test_hr = 0;
 	ML_RPE_CLS_INFO PreCls[ML_CLASS_UNREV + 1] = { 0 };
-	CLS_PREDICT_PRO ClsPrePro[ML_CLASS_UNREV + 1];
+	ML_CLS_TYPE ClsPrePro[ML_CLASS_UNREV + 1];
+
 
 	for (i = 0; i < ML_CLASS_UNREV + 1; i++)
 	{
@@ -521,13 +511,11 @@ void MachineLearn::testAndSaveClassifier(const Ptr<StatModel>& model, const Mat&
 
 		g_MaxSimValue = test_hr;
 	}
+#endif
 	return;
 
 }
 
-
-
-//随机树分类
 Ptr<StatModel> MachineLearn::buildRtreesClassifier(Mat data, Mat  responses, int ntrain_samples, double maxDepth, double iter)
 {
 
@@ -547,7 +535,7 @@ Ptr<StatModel> MachineLearn::buildRtreesClassifier(Mat data, Mat  responses, int
 	return model;
 }
 
-//adaboost分类
+//adaboost锟斤拷锟斤拷
 Ptr<StatModel> MachineLearn::buildAdaboostClassifier(Mat data, Mat  responses, int ntrain_samples, double param0, double param1)
 {
 	Mat weak_responses;
@@ -590,7 +578,6 @@ Ptr<StatModel> MachineLearn::buildAdaboostClassifier(Mat data, Mat  responses, i
 	return model;
 }
 
-//多层感知机分类（ANN）
 Ptr<StatModel> MachineLearn::buildMlpClassifier(Mat data, Mat  responses, int ntrain_samples, double param0, double param1)
 {
 	//read_num_class_data(data_filename, 16, &data, &responses);
@@ -631,7 +618,6 @@ Ptr<StatModel> MachineLearn::buildMlpClassifier(Mat data, Mat  responses, int nt
 }
 
 
-//贝叶斯分类
 Ptr<StatModel> MachineLearn::buildNbayesClassifier(Mat data, Mat  responses, int ntrain_samples)
 {
 	Ptr<NormalBayesClassifier> model;
@@ -653,7 +639,6 @@ Ptr<StatModel>  MachineLearn::buildKnnClassifier(Mat data, Mat  responses, int n
 	return model;
 }
 
-//svm分类
 Ptr<StatModel> MachineLearn::buildSvmClassifier(Mat data, Mat  responses, int ntrain_samples)
 {
 	Ptr<SVM> model;
@@ -708,17 +693,10 @@ int MachineLearn::predictCls(const Ptr<StatModel>& model, const Mat pendSample, 
 }
 
 
-int MachineLearn::predictCls(const Ptr<StatModel>& model, lppca pca, const Mat pendSample, int iMlModel)
+int MachineLearn::predictCls(const Ptr<StatModel>& model, const Mat pendSample, int iMlModel)
 {
-	Mat pcaTemp;
 	int iRet = 0;
 
-	if (!pca.m_bIsBuildPca)
-	{
-		return  -1;
-	}
-
-	iRet = pca.getReductDimMat(pendSample, &pcaTemp);
 	int iCls = predictCls(model, pendSample, iMlModel);
 
 	if (iRet != 0 || iCls < 0)
@@ -728,63 +706,13 @@ int MachineLearn::predictCls(const Ptr<StatModel>& model, lppca pca, const Mat p
 	return  iCls;
 }
 
-int  MachineLearn::predictClsVote(vector<CLS_PREDICT_VOTE> PredictVote, int strictMode)
+
+/*锟斤拷锟皆诧拷同锟斤拷锟斤拷锟斤拷锟斤拷锟叫讹拷 */
+int MachineLearn::predictClsVote(vector<CLS_PREDICT_VOTE> PredictVote, double* ClsPrePro)
 {
 	int Precls[ML_CLASS_UNREV] = { 0 };
 	bool bIsVote = false;
 	int BoostPre = ML_CLASS_UNREV;
-	for (int i = 0; i < PredictVote.size(); i++)
-	{
-		int Cls = PredictVote.at(i).PreCls;
-		Precls[Cls]++;
-
-		if (PredictVote.at(i).mlMode == LP_ML_ADABOOST)
-			BoostPre = Cls;
-	}
-
-	// 严格投票，只有全票通过才归为一类，否则就归为简单类
-	if (strictMode)
-	{
-		for (int i = 0; i < LP__CLASS_UNREV; i++)
-		{
-			if (Precls[i] == (LP__CLASS_UNREV - 1))
-			{
-				bIsVote = true;
-				return i;
-			}
-		}
-
-		if (bIsVote == false)
-		{
-			return LP__CLASS_COARSE_GRAIN;
-		}
-	}
-	else
-	{
-		for (int i = 0; i < LP__CLASS_UNREV; i++)
-		{
-			if (Precls[i] > 1)
-			{
-				bIsVote = true;
-				return i;
-			}
-		}
-
-		if (!bIsVote)
-		{
-			return  LP__CLASS_COARSE_GRAIN;
-		}
-	}
-
-	return LP__CLASS_COARSE_GRAIN;
-}
-
-/*针对不同种类进行判断 */
-int MachineLearn::predictClsVote(vector<CLS_PREDICT_VOTE> PredictVote, double* ClsPrePro)
-{
-	int Precls[LP__CLASS_UNREV] = { 0 };
-	bool bIsVote = false;
-	int BoostPre = LP__CLASS_UNREV;
 
 	for (int i = 0; i < PredictVote.size(); i++)
 	{
@@ -792,9 +720,9 @@ int MachineLearn::predictClsVote(vector<CLS_PREDICT_VOTE> PredictVote, double* C
 		Precls[Cls]++;
 	}
 
-	for (int i = 0; i < LP__CLASS_UNREV; i++)
+	for (int i = 0; i < ML_CLASS_UNREV; i++)
 	{
-		ClsPrePro[i] = Precls[i] * 1.0 / (LP__CLASS_UNREV - 1)*1.0;
+		ClsPrePro[i] = Precls[i] * 1.0 / (ML_CLASS_UNREV - 1)*1.0;
 	}
 
 	return 0;
@@ -805,7 +733,7 @@ int MachineLearn::predictCls(const Mat pendSample, int iMlModel)
 {
 	if (m_bIsLoadClsModel)
 	{
-		if (iMlModel == LP_ML_ADABOOST)
+		if (iMlModel == ML_METHOD_ADABOOST)
 		{
 			int var_count = pendSample.cols;
 			int k, j, best_class;
@@ -848,22 +776,22 @@ Ptr<StatModel> MachineLearn::buildClassifier(Mat data, Mat response, float ratio
 
 	switch (mode)
 	{
-	case LP_ML_RTREES:
+	case ML_METHOD_RTREES:
 		pClsModel = buildRtreesClassifier(data, response, ntrain_samples, param0, param1);
 		break;
-	case LP_ML_ADABOOST:
+	case ML_METHOD_ADABOOST:
 		pClsModel = buildAdaboostClassifier(data, response, ntrain_samples, param0, param1);
 		break;
-	case LP_ML_MLP:
+	case ML_METHOD_MLP:
 		pClsModel = buildMlpClassifier(data, response, ntrain_samples, param0, param1);
 		break;
-	case LP_ML_KNN:
+	case ML_METHOD_KNN:
 		pClsModel = buildKnnClassifier(data, response, ntrain_samples, param0);
 		break;
-	case LP_ML_NBAYES:
+	case ML_METHOD_NBAYES:
 		pClsModel = buildNbayesClassifier(data, response, ntrain_samples);
 		break;
-	case LP_ML_SVM:
+	case ML_METHOD_SVM:
 		pClsModel = buildSvmClassifier(data, response, ntrain_samples);
 		break;
 	default:
@@ -1045,27 +973,23 @@ bool MachineLearn::isLoadMlCls()
 
 void MachineLearn::buildMlClassfierTest(Mat data, Mat response, float ration, int iMlMode, char* resultPath, double params0)
 {
-	//建立模型
 	Ptr<StatModel> pClsModel;
 	char cParam[20];
 	char cParam1[20];
 	pClsModel = buildClassifier(data, response, ration, iMlMode, params0);
 
-	//保存测试结果
 	testAndSaveClassifier(pClsModel, data, response, iMlMode, ration, 0, resultPath, itoa(params0, cParam, 10), NULL);
 	return;
 }
 
 void MachineLearn::buildMlClassfierTest(String trainPath, int iMlMode, char* testrResultPath, double param0, double param1)
 {
-	//建立训练样本
 	Mat trainData;
 	Mat trainLabel;
 
 	for (int i = 1; i < 11; i++)
 	{
-		buildMlClassfierSampleData(trainPath, &trainData, &trainLabel, LP_ML_REDUCED_DIM_PCA);
-		//建立模型
+		buildMlClassfierSampleData(trainPath, &trainData, &trainLabel);
 		buildMlClassfierTest(trainData, trainLabel, 0.8, iMlMode, testrResultPath, param0);
 	}
 
@@ -1074,7 +998,6 @@ void MachineLearn::buildMlClassfierTest(String trainPath, int iMlMode, char* tes
 
 list <Ml_Base_Feature> MachineLearn::get10FoldCrossValidation(list<Ml_Base_Feature> allFeature, int index)
 {
-	//allFeature  为有序链表
 
 	list<Ml_Base_Feature> qlTestSample;
 	list<Ml_Base_Feature> qlTrainSample;
@@ -1128,7 +1051,6 @@ list <Ml_Base_Feature> MachineLearn::get10FoldCrossValidation(list<Ml_Base_Featu
 
 void MachineLearn::buildMlClassfierTest2(String trainPath, int iMlMode, char* testrResultPath, double param0, double param1)
 {
-	//建立训练样本
 	int iRet = 0;
 	int isize = 0;
 	int iTestIndex = 0;
@@ -1146,7 +1068,6 @@ void MachineLearn::buildMlClassfierTest2(String trainPath, int iMlMode, char* te
 		Mat trainLabel;
 		Mat matTemp;
 		vector<int> responsees_temp;
-		//random_shuffle(allFeature.begin(), allFeature.end());
 
 		list<Ml_Base_Feature> templist = get10FoldCrossValidation(allFeature, iTestIndex);
 
@@ -1157,17 +1078,7 @@ void MachineLearn::buildMlClassfierTest2(String trainPath, int iMlMode, char* te
 		}
 
 		Mat(responsees_temp).copyTo(trainLabel);
-
-		if (LP_ML_REDUCED_DIM_PCA == param1)
-		{
-			lppca lpPcaTemp(matTemp, matTemp.rows, 0.9);
-			trainData = lpPcaTemp.getFeatureReductionDimData();
-		}
-		else
-		{
-			trainData = matTemp;
-		}
-
+		trainData = matTemp;
 		Ptr<StatModel> pClsModel;
 		char cParam0[20];
 		char cParam1[20];
@@ -1175,7 +1086,6 @@ void MachineLearn::buildMlClassfierTest2(String trainPath, int iMlMode, char* te
 		sprintf(cParam1, "%.4lf", param1);
 		pClsModel = buildClassifier(trainData, trainLabel, 0.9, iMlMode, param0, param1);
 
-		//保存测试结果
 		testAndSaveClassifier(pClsModel, trainData, trainLabel, templist, iMlMode, 0.9, 0, testrResultPath, cParam0, cParam1);
 
 		responsees_temp.clear();
@@ -1186,7 +1096,6 @@ void MachineLearn::buildMlClassfierTest2(String trainPath, int iMlMode, char* te
 
 void MachineLearn::buildMlClassfierTest2(list<Ml_Base_Feature> allFeature, int iMlMode, char* testrResultPath, double param0, double param1)
 {
-	//建立训练样本
 	int iTestIndex = 0;
 	int isize = allFeature.size();
 
@@ -1206,25 +1115,15 @@ void MachineLearn::buildMlClassfierTest2(list<Ml_Base_Feature> allFeature, int i
 		for (int i = 0; i < isize; i++)
 		{
 			Ml_Base_Feature temp = templist.at(i);
-			if (!temp.FeatureInfo.empty())
+			if (!temp.featureInfo.empty())
 			{
-				matTemp.push_back(temp.FeatureInfo);
+				matTemp.push_back(temp.featureInfo);
 				responsees_temp.push_back(temp.iLabel);
 			}
 		}
 
 		Mat(responsees_temp).copyTo(trainLabel);
-
-		if (LP_ML_REDUCED_DIM_PCA == param1)
-		{
-			lppca lpPcaTemp(matTemp, matTemp.rows, 0.8);
-			trainData = lpPcaTemp.getFeatureReductionDimData();
-		}
-		else
-		{
-			trainData = matTemp;
-		}
-
+		trainData = matTemp;
 		Ptr<StatModel> pClsModel;
 		pClsModel = buildClassifier(trainData, trainLabel, 0.9, iMlMode, param0, param1);
 
@@ -1233,7 +1132,6 @@ void MachineLearn::buildMlClassfierTest2(list<Ml_Base_Feature> allFeature, int i
 		sprintf(cParam0, "%.4lf", param0);
 		sprintf(cParam1, "%.4lf", param1);
 
-		//保存测试结果
 		testAndSaveClassifier(pClsModel, trainData, trainLabel, templist, iMlMode, 0.9, 0, testrResultPath, cParam0, cParam1);
 
 		responsees_temp.clear();
@@ -1249,12 +1147,10 @@ int MachineLearn::buildMlClassfierAndSave(String trainPath, String mlModelSavePa
 	{
 		return 0;
 	}
-	//建立训练样本
 	Mat trainData;
 	Mat trainLabel;
-	buildMlClassfierSampleData(String::fromStdString(trainPath), &trainData, &trainLabel);
+	buildMlClassfierSampleData(trainPath, &trainData, &trainLabel);
 
-	//建立模型
 	Ptr<StatModel> pClsModel;
 	pClsModel = buildClassifier(trainData, trainLabel, 1, iMlMode, param0);
 
@@ -1263,7 +1159,6 @@ int MachineLearn::buildMlClassfierAndSave(String trainPath, String mlModelSavePa
 		return -1;
 	}
 
-	//保存测试结果
 	pClsModel->save(mlModelSavePath.c_str());
 
 	m_bIsTrainSample = true;
@@ -1273,18 +1168,15 @@ int MachineLearn::buildMlClassfierAndSave(String trainPath, String mlModelSavePa
 
 Ptr<StatModel> MachineLearn::buildMlClassfier(String trainPath, int iMlMode, double param0, double param1)
 {
-	//建立模型
 	Ptr<StatModel> pClsModel;
 	if (m_bIsTrainSample)
 	{
 		return pClsModel;
 	}
-	//建立训练样本
 	Mat trainData;
 	Mat trainLabel;
-	buildMlClassfierSampleData(String::fromStdString(trainPath), &trainData, &trainLabel);
+	buildMlClassfierSampleData(trainPath, &trainData, &trainLabel);
 
-	//建立模型
 	pClsModel = buildClassifier(trainData, trainLabel, 1, iMlMode, param0);
 
 	return pClsModel;
@@ -1294,8 +1186,4 @@ Ptr<StatModel> MachineLearn::buildMlClassfier(String trainPath, int iMlMode, dou
 MachineLearn::~MachineLearn()
 {
 
-}
-
-MachineLearn::~MachineLearn()
-{
 }

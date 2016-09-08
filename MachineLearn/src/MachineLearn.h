@@ -2,6 +2,8 @@
 #include "MachineLearnUtils.h"
 #include "ImageBaseUtils.h"
 
+#define ML_FEATURE_DIM_PCA 0
+
 typedef struct ML_BASE_FEATURE
 {
 	Mat    featureInfo;
@@ -11,7 +13,6 @@ typedef struct ML_BASE_FEATURE
 }Ml_Base_Feature;
 
 
-
 typedef enum ML_CLS_TYPE
 {
 	ML_CLASS_ONE,
@@ -19,7 +20,6 @@ typedef enum ML_CLS_TYPE
 	ML_CLASS_THREE,
 	ML_CLASS_UNREV
 };
-
 
 typedef enum ML_METHOD_TYPE
 {
@@ -46,12 +46,11 @@ typedef enum ML_FEATURE_TYPE
 	ML_TEXT_GLCM,
 	ML_TEXT_HIST,
 	ML_FEATURE_MAX
-};
+}ML_FEATURE_TYPE;
 
 
 const int class_count = CT_THREE;
 const int computerFeatureMode = ML_TEXT_FEATURE;
-
 
 typedef struct ML_PRE_CLS_INFO
 {
@@ -103,7 +102,7 @@ private:
 
 	//随机树分类
 	Ptr<StatModel> buildRtreesClassifier(Mat data, Mat  responses, int ntrain_samples, double maxDepth, double iter);
-	
+
 	Ptr<StatModel> buildAdaboostClassifier(Mat data, Mat  responses, int ntrain_samples, double param0, double param1);
 	//多层感知机分类（ANN）
 	Ptr<StatModel> buildMlpClassifier(Mat data, Mat  responses, int ntrain_samples, double param0, double param1);
