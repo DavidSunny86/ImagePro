@@ -1,4 +1,4 @@
-#include "ImageThresold.h"
+#include "mvImgThresold.h"
 
 
 ImageThresold::ImageThresold()
@@ -70,7 +70,7 @@ int ImageThresold::thresholdOtsu(const Mat& src)
 	int threshold;
 	float maxVariance = 0;
 	float w = 0, u = 0;
-	for (int i = 0; i < 256; i++) 
+	for (int i = 0; i < 256; i++)
 	{
 		w += histogram[i];
 		u += i*histogram[i];
@@ -108,7 +108,7 @@ int ImageThresold::ostuThresold(const Mat& src,const Mat thrMat)
 	threshold(src, dstTmp, ostuThr, 255, cv::THRESH_BINARY);
 	thrMat = dstTmp;
 	return 0;
-	
+
 }
 
 cv::Mat ImageThresold::maxEntropy(const Mat& src)
@@ -193,7 +193,7 @@ int ImageThresold::calculateBestGlobalThr(const Mat& src)
 		t += hist[i];
 		u += i*hist[i];
 	}
-	k2 = (int)(u / t); // 计算此范围灰度的平均值 
+	k2 = (int)(u / t); // 计算此范围灰度的平均值
 	do
 	{
 		k1 = k2;
@@ -216,10 +216,68 @@ int ImageThresold::calculateBestGlobalThr(const Mat& src)
 			u2 = 0;
 		k2 = (int)((u1 + u2) / 2); // 得到新的阈值估计值
 	} while (k1 != k2); // 数据未稳定，继续
-	
-	
+
 	return k1; // 返回阈值
 }
+
+
+void ImageThresold::bersenLocalThreshold(const Mat& img, Mat& mask, Mat kernelMat, int localContrastThre, int grayThre)
+{
+    Mat backgroundMat(img.rows, img.cols, img.type());
+    backgroundMat.setTo(grayThre);
+    bersenLocalThreshold(img, mask, kernelMat, localContrastThre, backgroundMat);
+}
+
+void ImageThresold::bersenLocalThreshold(const Mat& img, Mat& mask, int ksize, int localContrastThre, int grayThre)
+{
+    Mat kernelMat = Mat::ones(ksize, ksize, CV_8UC1);
+    bersenLocalThreshold(img, mask, kernelMat, localContrastThre, grayThre);
+}
+
+void ImageThresold::bersenLocalYThreshold(const Mat& img, Mat& mask, int ksize, int localContrastThre, int grayThre)
+{
+    Mat kernelMat = Mat::ones(ksize, 1, CV_8UC1);
+    bersenLocalThreshold(img, mask, kernelMat, localContrastThre, grayThre);
+}
+
+void ImageThresold::bersenLocalYThreshold(const Mat& img, Mat& mask, int ksize, int localContrastThre, const Mat& backgroundMat)
+{
+    Mat kernelMat = Mat::ones(ksize, 1, CV_8UC1);
+    bersenLocalThreshold(img, mask, kernelMat, localContrastThre, backgroundMat);
+}
+
+void ImageThresold::bersenLocalXThreshold(const Mat& img, Mat& mask, int ksize, int localContrastThre, int grayThre)
+{
+    Mat kernelMat = Mat::ones(1, ksize, CV_8UC1);
+    bersenLocalThreshold(img, mask, kernelMat, localContrastThre, grayThre);
+}
+
+void ImageThresold::bersenLocalXThreshold(const Mat& img, Mat& mask, int ksize, int localContrastThre, const Mat& backgroundMat)
+{
+    Mat kernelMat = Mat::ones(1, ksize, CV_8UC1);
+    bersenLocalThreshold(img, mask, kernelMat, localContrastThre, backgroundMat);
+}
+
+void ImageThresold::bersenLocalThreshold(const Mat& img, Mat& mask, const Mat& kernelMat, int localContrastThre, const Mat& backgroundMat)
+{
+    Mat maxMat, minMat;
+    dilate(img, maxMat, kernelMat);
+    erode(img, minMat, kernelMat);
+
+    Mat localContrastMat = maxMat - minMat;
+    Mat midGrayMat = (maxMat + minMat) / 2;
+
+    Mat localContrastMask = localContrastMat < localContrastThre;
+    Mat midGrayMask = midGrayMat >= backgroundMat;
+
+    mask = localContrastMask & midGrayMask;
+
+    Mat invLocalContrastMask = ~localContrastMask;
+    mask |= invLocalContrastMask & (img > midGrayMat);
+	return ;
+}
+
+
 
 ImageThresold::~ImageThresold()
 {

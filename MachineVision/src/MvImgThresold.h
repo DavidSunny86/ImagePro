@@ -28,12 +28,19 @@ public:
 	static Mat localThresold(const Mat& src);
 	static int ostuThresold(const Mat& src, Mat& dst);
 	static Mat maxEntropy(const Mat& src, int mode);
+	static void bersenLocalThreshold(const Mat& img, Mat& mask, Mat kernelMat, int localContrastThre, int grayThre);
+	static void bersenLocalThreshold(const Mat& img, Mat& mask, int ksize, int localContrastThre, int grayThre);
+	static void bersenLocalYThreshold(const Mat& img, Mat& mask, int ksize, int localContrastThre, int grayThre);
+	static void bersenLocalYThreshold(const Mat& img, Mat& mask, int ksize, int localContrastThre, const Mat& backgroundMat);
+	static void bersenLocalXThreshold(const Mat& img, Mat& mask, int ksize, int localContrastThre, int grayThre);
+	static void bersenLocalXThreshold(const Mat& img, Mat& mask, int ksize, int localContrastThre, const Mat& backgroundMat);
 	~ImageThresold();
 
 private:
 	int         ostuThresold(const Mat& src, Mat& dst);
 	double      caculateCurrentEntropy(CvHistogram * Hist, int curThr, EntropyState state);
 	int         calculateBestGlobalThr(const Mat& src);
+	void        bersenLocalThreshold(const Mat& img, Mat& mask, const Mat& kernelMat, int localContrastThre, const Mat& backgroundMat);
 
 
 private:
@@ -51,6 +58,3 @@ private:
 
 
 #endif
-
-
-

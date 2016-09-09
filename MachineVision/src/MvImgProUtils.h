@@ -1,5 +1,5 @@
-#ifndef IMAGETHRUTILS_H_
-#define IMAGETHRUTILS_H_
+#ifndef MVIMGPROUTILS_H_
+#define MVIMGPROUTILS_H_
 
 
 #define MACHINEVISION_MODEL_EXPORT __declspec(dllimport)
