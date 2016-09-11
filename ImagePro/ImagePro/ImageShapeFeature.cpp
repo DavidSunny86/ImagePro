@@ -82,7 +82,7 @@ void ellipticFourierDescriptor(vector<Point> &contour, vector<float> &CE)
 	}
 }
 
-vector<Point> ImageShapeFeature : shapeContextFeature(const Mat& currentQuery, int n = 300)
+vector<Point> ImageShapeFeature::shapeContextFeature(const Mat& currentQuery, int n = 300)
 {
 	vector<vector<Point> > _contoursQuery;
 	vector <Point> contoursQuery;

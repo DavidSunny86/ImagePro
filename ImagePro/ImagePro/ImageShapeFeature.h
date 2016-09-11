@@ -2,6 +2,7 @@
 #define IMAGESHAPEFEATURE_H_
 
 #include "ImageBaseUtils.h"
+#include "imageProCom.h"
 
 typedef enum SHAPETYPE
 {
