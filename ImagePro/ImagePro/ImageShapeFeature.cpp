@@ -6,6 +6,39 @@ ImageShapeFeature::ImageShapeFeature()
 }
 
 
+float ImageShapeFeature::computerShapeContext(vector<Point>& src, vector<Point>& dst)
+{
+	cv::Ptr <cv::ShapeContextDistanceExtractor> mysc = cv::createShapeContextDistanceExtractor();
+
+	float dis = mysc->computeDistance(src, dst);
+
+	return dis;
+}
+
+float ImageShapeFeature::computerShapeContext(Mat& src, Mat& dst, int n /*= 300*/, int width /*= 300*/, int height /*= 300*/)
+{
+	if (src.empty() || dst.empty())
+	{
+		return CTPLAR_INPUT_ERR;
+	}
+
+	Mat srcTmp;
+	Mat dstTmp;
+	Size sz2Sh(width, height);
+
+	resize(src,srcTmp,sz2Sh);
+	resize(dst, dstTmp, sz2Sh);
+
+	vector<Point> srcShapeContext = shapeContextFeature(srcTmp);
+	vector<Point> dstShapeContext = shapeContextFeature(dstTmp);
+
+	cv::Ptr <cv::ShapeContextDistanceExtractor> mysc = cv::createShapeContextDistanceExtractor();
+
+	float dis = mysc->computeDistance(srcShapeContext, dstShapeContext);
+
+	return dis;
+
+}
 
 /*************************************************
 // Method: EllipticFourierDescriptor
@@ -47,7 +80,36 @@ void ellipticFourierDescriptor(vector<Point> &contour, vector<float> &CE)
 		CE.push_back(value);
 
 	}
+}
 
+vector<Point> ImageShapeFeature : shapeContextFeature(const Mat& currentQuery, int n = 300)
+{
+	vector<vector<Point> > _contoursQuery;
+	vector <Point> contoursQuery;
+	findContours(currentQuery, _contoursQuery, RETR_LIST, CHAIN_APPROX_NONE);
+	for (size_t border = 0; border < _contoursQuery.size(); border++)
+	{
+		for (size_t p = 0; p < _contoursQuery[border].size(); p++)
+		{
+			contoursQuery.push_back(_contoursQuery[border][p]);
+		}
+	}
+
+	// In case actual number of points is less than n
+	int dummy = 0;
+	for (int add = (int)contoursQuery.size() - 1; add < n; add++)
+	{
+		contoursQuery.push_back(contoursQuery[dummy++]); //adding dummy values
+	}
+
+	// Uniformly sampling
+	random_shuffle(contoursQuery.begin(), contoursQuery.end());
+	vector<Point> cont;
+	for (int i = 0; i < n; i++)
+	{
+		cont.push_back(contoursQuery[i]);
+	}
+	return cont;
 }
 
 
